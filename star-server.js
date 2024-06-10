@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 // Replace with the actual URL of the random-values-app API
-const apiEndpoint = 'http://localhost:5000/api/endpoint'; // Adjust the endpoint as needed
+const apiEndpoint = 'http://prng-container:5000/api/endpoint'; // Adjust the endpoint as needed
 
 // Function to draw a star
 function drawStar(ctx, n, r, x, y) {
