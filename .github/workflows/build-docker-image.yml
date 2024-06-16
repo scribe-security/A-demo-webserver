@@ -107,7 +107,20 @@ jobs:
            config: .valint.yaml
            label: "Flamingo"
 
-
+      - uses: scribe-security/action-verify@master
+        with:
+          target: '${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
+          scribe-enable: true
+          format: attest
+          config: .valint.yaml
+          rule: allowed-components.yaml
+          git-branch: allowed-components
+          verbose: 2
+          label: "Flamingo"
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
+          scribe-verify: true
+          scribe-verify-policy: ""
      
       - name: create slsa provenance
         id: slsa_provenance
@@ -126,9 +139,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: provenance
-          path: ${{ steps.slsa_provenance.outputs.OUTPUT_PATH }} 
-           
-           
-
-
- 
+          path: ${{ steps.slsa_provenance.outputs.OUTPUT_PATH }}
