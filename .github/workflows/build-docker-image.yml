@@ -1,0 +1,114 @@
+name: build-pipeline-signed
+
+env:
+  DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+  PRODUCT_VERSION: 0.4.12
+  IMAGE_NAME: ${{ github.repository }}:${{ github.sha }}
+  APP_NAME: star-generator
+  VALINT_BOM_AUTHOR_NAME: Guy-Chernobrov
+  VALINT_BOM_AUTHOR_EMAIL: gc@scribesecurity.com
+  VALINT_BOM_AUTHOR_PHONE: 052-9281309
+  VALINT_BOM_SUPPLIER_NAME: Scribe-Security
+  VALINT_BOM_SUPPLIER_URL: www.scribesecurity.com
+  VALINT_BOM_SUPPLIER_EMAIL: info@scribesecurity.com
+  VALINT_BOM_SUPPLIER_PHONE: 001-001-0011
+  INTEGRATION_TEST: 15s
+  GITHUB_RUN_NUM: ${{ github.run_number }}
+  
+  
+on:
+  workflow_dispatch:
+#  pull_request:
+#  push:
+#    branches: [main]
+
+concurrency: 
+  group: build-in-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  attest-and-build:
+    
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+#      - name: Set up Node.js
+#        uses: actions/setup-node@v3
+#        with:
+        #  node-version: 14
+
+#      - name: Install dependencies
+#        run: npm install --save-exact
+
+#      - name: Build app
+#        run: npm run build
+     
+           
+      - name: Generate signed SBOM for repo content clone
+        uses: scribe-security/action-bom@master
+        with:
+            target: 'git:.'
+            scribe-enable: true
+            product-key: ${{ env.APP_NAME }}
+            product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+            # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
+            scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+            components: commits,packages,files,dep
+            format: attest
+            config: .valint.yaml
+            verbose: 2
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: evidence
+          path: scribe/valint/*.json*
+
+      - name: Build Docker image
+        # run: docker build . -t app_image:1.1.$GITHUB_RUN_NUM
+        run: docker build . -t app_image:1.1.${{env.GITHUB_RUN_NUM}} 
+
+      - name: Generate signed SBOM for docker image
+        uses: scribe-security/action-bom@master
+        with:
+           target: 'app_image:1.1.${{env.GITHUB_RUN_NUM}}'
+           scribe-enable: true
+           product-key:  ${{ env.APP_NAME }}
+           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
+           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+           format: attest
+           config: .valint.yaml
+           label: "Flamingo"
+
+
+     
+      - name: create slsa provenance
+        id: slsa_provenance
+        uses: scribe-security/action-slsa@master
+        with:
+           target: 'app_image:1.1.${{env.GITHUB_RUN_NUM}}'
+           scribe-enable: true
+           product-key:  ${{ env.APP_NAME }}
+           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
+           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+           format: attest
+           config: .valint.yaml
+
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: provenance
+          path: ${{ steps.slsa_provenance.outputs.OUTPUT_PATH }} 
+           
+           
+
+
+ 
