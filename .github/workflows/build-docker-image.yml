@@ -107,7 +107,8 @@ jobs:
            config: .valint.yaml
            label: "Flamingo"
 
-      - uses: scribe-security/action-verify@master
+      - name: Verify signed SBOM for docker image
+        uses: scribe-security/action-verify@master
         with:
           target: '${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
           scribe-enable: true
