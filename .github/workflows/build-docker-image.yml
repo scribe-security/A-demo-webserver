@@ -76,7 +76,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Build Docker image
+      # - name: Build Docker image
         # run: docker build . -t ${{env.IMAGE_NAME}}:1.1.$GITHUB_RUN_NUM
         #run: docker build . -t ${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}} 
       - name: Set up Docker Buildx
@@ -112,16 +112,15 @@ jobs:
         with:
           target: '${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
           scribe-enable: true
+          product-key:  ${{ env.APP_NAME }}
+          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+          # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
           format: attest
           config: .valint.yaml
+          label: "Flamingo"
           rule: allowed-components.yaml
           git-branch: allowed-components
-          verbose: 2
-          label: "Flamingo"
-          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-          scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
-          scribe-verify: true
-          scribe-verify-policy: ""
      
       - name: create slsa provenance
         id: slsa_provenance
