@@ -3,8 +3,8 @@ name: build-pipeline-signed
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
   PRODUCT_VERSION: 0.4.12
-  IMAGE_NAME: ${{ github.repository }}:${{ github.sha }}
-  APP_NAME: star-generator
+  IMAGE_NAME: star-generator
+  APP_NAME: Sky-Mapper
   VALINT_BOM_AUTHOR_NAME: Guy-Chernobrov
   VALINT_BOM_AUTHOR_EMAIL: gc@scribesecurity.com
   VALINT_BOM_AUTHOR_PHONE: 052-9281309
@@ -58,7 +58,6 @@ jobs:
             scribe-enable: true
             product-key: ${{ env.APP_NAME }}
             product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-            # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
             scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
             components: commits,packages,files,dep
             format: attest
@@ -71,13 +70,13 @@ jobs:
           path: scribe/valint/*.json*
 
       - name: Build Docker image
-        # run: docker build . -t app_image:1.1.$GITHUB_RUN_NUM
-        run: docker build . -t app_image:1.1.${{env.GITHUB_RUN_NUM}} 
+        # run: docker build . -t ${{env.IMAGE_NAME}}:1.1.$GITHUB_RUN_NUM
+        run: docker build . -t ${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}} 
 
       - name: Generate signed SBOM for docker image
         uses: scribe-security/action-bom@master
         with:
-           target: 'app_image:1.1.${{env.GITHUB_RUN_NUM}}'
+           target: '${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
            scribe-enable: true
            product-key:  ${{ env.APP_NAME }}
            product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
@@ -93,7 +92,7 @@ jobs:
         id: slsa_provenance
         uses: scribe-security/action-slsa@master
         with:
-           target: 'app_image:1.1.${{env.GITHUB_RUN_NUM}}'
+           target: '${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
            scribe-enable: true
            product-key:  ${{ env.APP_NAME }}
            product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
