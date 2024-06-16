@@ -95,7 +95,7 @@ jobs:
       - name: Generate signed SBOM for docker image
         uses: scribe-security/action-bom@master
         with:
-           target: '${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
+           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
            scribe-enable: true
            product-key:  ${{ env.APP_NAME }}
            product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
