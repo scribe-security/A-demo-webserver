@@ -90,7 +90,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/your-repo:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
 
       - name: Generate signed SBOM for docker image
         uses: scribe-security/action-bom@master
