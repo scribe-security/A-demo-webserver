@@ -27,8 +27,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    
+  attest-checkout:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -65,7 +64,18 @@ jobs:
         with:
           name: evidence
           path: scribe/valint/*.json*
-
+  
+  
+  build-docker-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Build Docker image
         # run: docker build . -t ${{env.IMAGE_NAME}}:1.1.$GITHUB_RUN_NUM
         run: docker build . -t ${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}} 
