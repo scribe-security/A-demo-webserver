@@ -59,6 +59,8 @@ jobs:
             format: attest
             config: .valint.yaml
             verbose: 2
+            deliverable: true
+            
 
       - uses: actions/upload-artifact@v3
         with:
