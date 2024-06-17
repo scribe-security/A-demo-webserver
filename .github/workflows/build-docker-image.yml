@@ -59,6 +59,8 @@ jobs:
             format: attest
             config: .valint.yaml
             verbose: 2
+            deliverable: true
+            
 
       - uses: actions/upload-artifact@v3
         with:
@@ -76,9 +78,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      # - name: Build Docker image
-        # run: docker build . -t ${{env.IMAGE_NAME}}:1.1.$GITHUB_RUN_NUM
-        #run: docker build . -t ${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}} 
+  
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -92,12 +92,12 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/your-repo:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
 
       - name: Generate signed SBOM for docker image
         uses: scribe-security/action-bom@master
         with:
-           target: '${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
+           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
            scribe-enable: true
            product-key:  ${{ env.APP_NAME }}
            product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
@@ -110,7 +110,7 @@ jobs:
       - name: Verify signed SBOM for docker image
         uses: scribe-security/action-verify@master
         with:
-          target: '${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
+          target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
           scribe-enable: true
           product-key:  ${{ env.APP_NAME }}
           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
@@ -125,7 +125,7 @@ jobs:
         id: slsa_provenance
         uses: scribe-security/action-slsa@master
         with:
-           target: '${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
+           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
            scribe-enable: true
            product-key:  ${{ env.APP_NAME }}
            product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
