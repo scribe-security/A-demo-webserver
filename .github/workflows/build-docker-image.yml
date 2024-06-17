@@ -120,6 +120,7 @@ jobs:
           config: .valint.yaml
           label: "Flamingo"
           rule: critical-vulns-rule.yaml
+          skip-bundle: false
      
       - name: create slsa provenance
         id: slsa_provenance
