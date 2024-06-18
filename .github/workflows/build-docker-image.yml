@@ -107,7 +107,19 @@ jobs:
            config: .valint.yaml
            label: "Flamingo"
 
-
+      - name: Verify signed SBOM for docker image
+        uses: scribe-security/action-verify@master
+        with:
+          scribe-enable: true
+          product-key:  ${{ env.APP_NAME }}
+          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+          # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          format: attest
+          config: .valint.yaml
+          label: "Flamingo"
+          rule: critical-vulns-rule.yaml
+          skip-bundle: false
      
       - name: create slsa provenance
         id: slsa_provenance

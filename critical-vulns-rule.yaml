@@ -1,0 +1,10 @@
+uses: api/scribe-api-cve@v1
+
+evidence:
+  signed: true
+
+with:
+  superset:
+    cve:
+      max: 0
+      severity: 9
