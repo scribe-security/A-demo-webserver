@@ -1,5 +1,5 @@
 # Use the official Node.js image from the Docker Hub
-FROM node:17
+FROM node:slim
 
 # Set the working directory
 WORKDIR /usr/src/app
