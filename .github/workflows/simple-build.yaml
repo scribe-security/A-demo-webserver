@@ -1,10 +1,9 @@
-name: build-pipeline-signed
-
+name: simple-build-policy
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-  PRODUCT_VERSION: 0.4.12
+  PRODUCT_VERSION: 0.1.18
   IMAGE_NAME: star-generator
-  APP_NAME: Sky-Mapper
+  APP_NAME: Star-Generator
   VALINT_BOM_AUTHOR_NAME: Guy-Chernobrov
   VALINT_BOM_AUTHOR_EMAIL: gc@scribesecurity.com
   VALINT_BOM_AUTHOR_PHONE: 052-9281309
@@ -60,7 +59,24 @@ jobs:
             config: .valint.yaml
             verbose: 2
             deliverable: true
-            
+           
+      - name: integration-test
+        run: sleep 30
+        shell: bash          
+      - name: Verify critial vulns
+        uses: scribe-security/action-verify@master
+        with:
+          scribe-enable: true
+          product-key:  ${{ env.APP_NAME }}
+          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          config: .valint.yaml
+          rule: critical-vulns-rule.yaml
+          skip-bundle: false
+          format: attest
+          verbose: 2
+
+
 
       - uses: actions/upload-artifact@v3
         with:
@@ -78,50 +94,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Verify GitHub project
-        uses: scribe-security/action-verify@master
-        env:
-          ATTEST_KEY: ${{ secrets.ATTEST_KEY }}
-          ATTEST_CERT: ${{ secrets.ATTEST_CERT }}
-          ATTEST_CA: ${{ secrets.ATTEST_CA }}
-        with:
-          scribe-enable: true
-          product-key:  Star-Generator
-          product-version: "v0.0.1-discovery-demo"
-          attest-default: x509-env
-          # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
-          scribe-client-secret: ${{ secrets.VALINT_SCRIBE_AUTH_CLIENT_SECRET_DEV_MIKEY }}
-          format: attest
-          config: .valint.yaml
-          label: "Flamingo"
-          rule: signed-commits-rule.yaml
-          rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
-          git-branch: github_rules
-          skip-bundle: false
-          scribe-url: https://api.dev.scribesecurity.com
-
-      - name: Verify SLSA 3
-        uses: scribe-security/action-verify@master
-        env:
-          ATTEST_KEY: ${{ secrets.ATTEST_KEY }}
-          ATTEST_CERT: ${{ secrets.ATTEST_CERT }}
-          ATTEST_CA: ${{ secrets.ATTEST_CA }}
-        with:
-          scribe-enable: true
-          product-key:  Star-Generator
-          product-version: "v0.0.1-discovery-demo"
-          attest-default: x509-env
-          # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
-          scribe-client-secret: ${{ secrets.VALINT_SCRIBE_AUTH_CLIENT_SECRET_DEV_MIKEY }}
-          format: attest
-          config: .valint.yaml
-          label: "Flamingo"
-          policy: slsa3-policy.yaml
-          rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
-          git-branch: SLSA-3-Compliance
-          skip-bundle: false
-          scribe-url: https://api.dev.scribesecurity.com
   
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -151,20 +123,7 @@ jobs:
            config: .valint.yaml
            label: "Flamingo"
 
-      - name: Verify signed SBOM for docker image
-        uses: scribe-security/action-verify@master
-        with:
-          scribe-enable: true
-          product-key:  ${{ env.APP_NAME }}
-          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-          # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
-          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-          format: attest
-          config: .valint.yaml
-          label: "Flamingo"
-          rule: critical-vulns-rule.yaml
-          skip-bundle: false
-     
+           
       - name: create slsa provenance
         id: slsa_provenance
         uses: scribe-security/action-slsa@master
