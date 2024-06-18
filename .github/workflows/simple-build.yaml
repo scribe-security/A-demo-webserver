@@ -1,7 +1,7 @@
 name: simple-build-policy
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-  PRODUCT_VERSION: 0.1.17
+  PRODUCT_VERSION: 0.1.18
   IMAGE_NAME: star-generator
   APP_NAME: Star-Generator
   VALINT_BOM_AUTHOR_NAME: Guy-Chernobrov
@@ -60,7 +60,9 @@ jobs:
             verbose: 2
             deliverable: true
            
-            
+      - name: integration-test
+        run: sleep 30
+        shell: bash          
       - name: Verify critial vulns
         uses: scribe-security/action-verify@master
         with:
