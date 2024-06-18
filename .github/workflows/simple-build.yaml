@@ -1,5 +1,4 @@
-name: simple-build-signed
-
+name: simple-build-policy
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
   PRODUCT_VERSION: 0.1.15
@@ -61,6 +60,20 @@ jobs:
             verbose: 2
             deliverable: true
             
+      - name: Verify critial vulns
+        uses: scribe-security/action-verify@master
+        with:
+          scribe-enable: true
+          product-key:  ${{ env.APP_NAME }}
+          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          format: attest
+          config: .valint.yaml
+          label: "Pink"
+          rule: critical-vulns-rule.yaml
+          skip-bundle: false
+
+
 
       - uses: actions/upload-artifact@v3
         with:
@@ -107,8 +120,7 @@ jobs:
            config: .valint.yaml
            label: "Flamingo"
 
-
-     
+           
       - name: create slsa provenance
         id: slsa_provenance
         uses: scribe-security/action-slsa@master
