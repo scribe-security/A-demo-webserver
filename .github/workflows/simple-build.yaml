@@ -1,7 +1,7 @@
 name: simple-build-policy
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-  PRODUCT_VERSION: 0.1.16
+  PRODUCT_VERSION: 0.1.17
   IMAGE_NAME: star-generator
   APP_NAME: Star-Generator
   VALINT_BOM_AUTHOR_NAME: Guy-Chernobrov
@@ -59,18 +59,16 @@ jobs:
             config: .valint.yaml
             verbose: 2
             deliverable: true
-            label: "Pink"
+           
             
       - name: Verify critial vulns
         uses: scribe-security/action-verify@master
         with:
-          target: 'git:.'
           scribe-enable: true
           product-key:  ${{ env.APP_NAME }}
           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
           config: .valint.yaml
-          label: "Pink"
           rule: critical-vulns-rule.yaml
           skip-bundle: false
           format: attest
