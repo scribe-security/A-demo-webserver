@@ -81,6 +81,8 @@ jobs:
 
       - name: Verify GitHub project
         uses: scribe-security/action-verify@master
+        env:
+          DEBUG: true
         with:
           scribe-enable: true
           product-key:  Star-Generator
@@ -94,6 +96,7 @@ jobs:
           rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
           git-branch: github_rules
           skip-bundle: false
+          verbose: 2
   
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
