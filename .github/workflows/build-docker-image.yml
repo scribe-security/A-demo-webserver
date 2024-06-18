@@ -82,7 +82,6 @@ jobs:
       - name: Verify GitHub project
         uses: scribe-security/action-verify@master
         env:
-          DEBUG: true
           ATTEST_KEY: ${{ secrets.ATTEST_KEY }}
           ATTEST_CERT: ${{ secrets.ATTEST_CERT }}
           ATTEST_CA: ${{ secrets.ATTEST_CA }}
@@ -100,13 +99,11 @@ jobs:
           rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
           git-branch: github_rules
           skip-bundle: false
-          verbose: 2
           scribe-url: https://api.dev.scribesecurity.com
 
       - name: Verify SLSA 3
         uses: scribe-security/action-verify@master
         env:
-          DEBUG: true
           ATTEST_KEY: ${{ secrets.ATTEST_KEY }}
           ATTEST_CERT: ${{ secrets.ATTEST_CERT }}
           ATTEST_CA: ${{ secrets.ATTEST_CA }}
@@ -124,7 +121,6 @@ jobs:
           rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
           git-branch: SLSA-3-Compliance
           skip-bundle: false
-          verbose: 2
           scribe-url: https://api.dev.scribesecurity.com
   
       - name: Set up Docker Buildx
