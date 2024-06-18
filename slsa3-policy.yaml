@@ -1,0 +1,10 @@
+evidence:
+  signed: true
+  labels:
+    - "asset_type=repository"
+    - '{{ .Args.RepoAsset }}'
+
+rules:
+  - uses: slsa3/no-cache-usage@v1
+  - uses: slsa3/no-org-secrets@v1
+  - uses: slsa3/ephemeral-runners-only@v1
