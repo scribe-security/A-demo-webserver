@@ -59,6 +59,7 @@ jobs:
             config: .valint.yaml
             verbose: 2
             deliverable: true
+            label: "Pink"
             
       - name: Verify critial vulns
         uses: scribe-security/action-verify@master
