@@ -90,6 +90,7 @@ jobs:
           scribe-enable: true
           product-key:  Star-Generator
           product-version: "v0.0.1-discovery-demo"
+          attest-default: x509-env
           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
           scribe-client-secret: ${{ secrets.VALINT_SCRIBE_AUTH_CLIENT_SECRET_DEV_MIKEY }}
           format: attest
