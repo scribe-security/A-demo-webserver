@@ -83,6 +83,9 @@ jobs:
         uses: scribe-security/action-verify@master
         env:
           DEBUG: true
+          ATTEST_KEY: ${{ secrets.ATTEST_KEY }}
+          ATTEST_CERT: ${{ secrets.ATTEST_CERT }}
+          ATTEST_CA: ${{ secrets.ATTEST_CA }}
         with:
           scribe-enable: true
           product-key:  Star-Generator
@@ -97,6 +100,7 @@ jobs:
           git-branch: github_rules
           skip-bundle: false
           verbose: 2
+          scribe-url: https://api.dev.scribesecurity.com
   
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -121,7 +125,7 @@ jobs:
            product-key:  ${{ env.APP_NAME }}
            product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
            # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
-           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+           scribe-client-secret: ${{ secrets.VALINT_SCRIBE_AUTH_CLIENT_SECRET_DEV_MIKEY }}
            format: attest
            config: .valint.yaml
            label: "Flamingo"
