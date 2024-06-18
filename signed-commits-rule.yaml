@@ -1,0 +1,8 @@
+using: repository/check-signed-commits@v1
+level: warning
+
+evidence:
+  signed: true
+  labels:
+    - "asset_type=repository"
+    - '{{ .Args.RepoAsset }}'
