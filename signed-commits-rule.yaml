@@ -1,4 +1,4 @@
-using: repository/check-signed-commits@v1
+uses: repository/check-signed-commits@v1
 level: warning
 
 evidence:

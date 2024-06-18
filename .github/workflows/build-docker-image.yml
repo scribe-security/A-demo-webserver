@@ -84,7 +84,7 @@ jobs:
         with:
           scribe-enable: true
           product-key:  Star-Generator
-          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+          product-version: "v0.0.1-discovery-demo"
           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
           format: attest
