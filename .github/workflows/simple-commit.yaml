@@ -1,4 +1,4 @@
-name: attest-star-server-commit
+name: Simple-commit
 
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
