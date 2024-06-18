@@ -112,7 +112,7 @@ jobs:
         with:
           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
           scribe-enable: true
-          product-key:  Start-Generator
+          product-key:  Star-Generator
           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
