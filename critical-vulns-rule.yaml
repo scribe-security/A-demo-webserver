@@ -2,6 +2,8 @@ uses: api/scribe-api-cve@v1
 
 evidence:
   signed: true
+  format-type: cyclonedx
+  target_type: git
 
 with:
   superset:
