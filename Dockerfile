@@ -1,6 +1,5 @@
 # Use the official Node.js image from the Docker Hub
-FROM node:22.3-slim
-
+FROM node:20.13.1-slim
 
 
 # Set the working directory
