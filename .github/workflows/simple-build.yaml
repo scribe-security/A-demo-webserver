@@ -101,7 +101,10 @@ jobs:
       contents: read
       id-token: write
     steps:
-
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+           fetch-depth: 0
       - name: Generate signed SBOM for docker image
         uses: scribe-security/action-bom@master
         with:
@@ -125,12 +128,20 @@ jobs:
         run: sleep 30
         shell: bash          
   enforce:
-    needs: tests
+    needs: 
+    - tests
+    - attest-image
+    - attest-checkout
+    
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+           fetch-depth: 0
       - name: Verify critial vulns
         uses: scribe-security/action-verify@master
         with:
