@@ -1,5 +1,5 @@
 # Use the official Node.js image from the Docker Hub
-FROM node:17.1.0-stretch-slim
+FROM node:current-alpine3.20
 
 
 # Set the working directory
