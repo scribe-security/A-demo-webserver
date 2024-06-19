@@ -1,5 +1,5 @@
 # Use the official Node.js image from the Docker Hub
-FROM node:20.10-buster-slim
+FROM node:22.3-slim
 
 
 
