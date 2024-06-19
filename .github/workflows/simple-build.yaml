@@ -118,7 +118,9 @@ jobs:
            config: .valint.yaml
            label: "Flamingo"
   tests:
-    needs: build-docker-image
+    needs: 
+    - build-docker-image
+    - attest-checkout
     runs-on: ubuntu-latest
     permissions:
       contents: read
