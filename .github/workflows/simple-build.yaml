@@ -144,7 +144,13 @@ jobs:
           format: attest
           verbose: 2
 
-
+  provenance-deploy:
+    needs: enforce
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
       - name: create slsa provenance
         id: slsa_provenance
         uses: scribe-security/action-slsa@master
