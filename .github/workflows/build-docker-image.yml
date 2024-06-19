@@ -94,7 +94,6 @@ jobs:
           scribe-client-secret: ${{ secrets.VALINT_SCRIBE_AUTH_CLIENT_SECRET_DEV_MIKEY }}
           format: attest
           config: .valint.yaml
-          label: "Flamingo"
           rule: signed-commits-rule.yaml
           rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
           git-branch: github_rules
@@ -116,7 +115,6 @@ jobs:
           scribe-client-secret: ${{ secrets.VALINT_SCRIBE_AUTH_CLIENT_SECRET_DEV_MIKEY }}
           format: attest
           config: .valint.yaml
-          label: "Flamingo"
           policy: slsa3-policy.yaml
           rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
           git-branch: SLSA-3-Compliance
