@@ -96,6 +96,7 @@ jobs:
   attest-image:
     needs: 
     - build-docker-image
+    - attest-checkout
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -120,7 +121,6 @@ jobs:
   tests:
     needs: 
     - build-docker-image
-    - attest-checkout
     runs-on: ubuntu-latest
     permissions:
       contents: read
