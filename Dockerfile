@@ -1,5 +1,6 @@
 # Use the official Node.js image from the Docker Hub
-FROM node:current-alpine3.20
+FROM node:20.10-buster-slim
+
 
 
 # Set the working directory
