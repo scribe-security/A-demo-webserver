@@ -2,9 +2,10 @@ uses: api/scribe-api-cve@v1
 
 evidence:
   signed: true
+  format-type: cyclonedx-json
 
 with:
   superset:
     cve:
       max: 0
-      severity: 9
+      severity: 9.5
