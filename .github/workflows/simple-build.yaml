@@ -1,7 +1,7 @@
 name: simple-build-policy
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-  PRODUCT_VERSION: 0.1.26
+  PRODUCT_VERSION: 0.1.27
   IMAGE_NAME: star-generator
   APP_NAME: Star-Generator
   VALINT_BOM_AUTHOR_NAME: Guy-Chernobrov
