@@ -94,6 +94,14 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
 
+  attest-image:
+    needs: attest-checkout
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+
       - name: Generate signed SBOM for docker image
         uses: scribe-security/action-bom@master
         with:
@@ -106,10 +114,23 @@ jobs:
            format: attest
            config: .valint.yaml
            label: "Flamingo"
-
+  tests:
+    needs: attest-checkout
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
       - name: integration-test
         run: sleep 30
         shell: bash          
+  enforce:
+    needs: tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
       - name: Verify critial vulns
         uses: scribe-security/action-verify@master
         with:
