@@ -95,7 +95,9 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
 
   attest-image:
-    needs: attest-checkout
+    needs: 
+    - attest-checkout
+    - build-docker-image
     runs-on: ubuntu-latest
     permissions:
       contents: read
