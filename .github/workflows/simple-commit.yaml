@@ -2,7 +2,7 @@ name: Simple-commit
 
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-  PRODUCT_VERSION: 0.1.23
+  PRODUCT_VERSION: 0.1.24
   IMAGE_NAME: star-generator
   APP_NAME: Star-Generator
   VALINT_BOM_AUTHOR_NAME: Guy-Chernobrov
