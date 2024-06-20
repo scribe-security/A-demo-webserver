@@ -5,8 +5,8 @@ const app = express();
 const port = 3000;
 
 // Replace with the actual URL of the random-values-app API
-// const apiEndpoint = process.env.URL_API; // Adjust the endpoint as needed
-const apiEndpoint = process.env.API_URL+/api/endpoint
+// apiEndpoint = 'http://python-api:5000/api/endpoint'; // Adjust the endpoint as needed
+const apiEndpoint = process.env.API_URL + '/api/endpoint';
 
 // Function to draw a star
 function drawStar(ctx, n, r, x, y) {
