@@ -1,4 +1,4 @@
-name: simple-build-policy
+name: simple-build-slsa3
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
   PRODUCT_VERSION: 0.1.29
