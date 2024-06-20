@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const { createCanvas } = require('canvas');
+require('dotenv').config();
 const app = express();
 const port = 3000;
 
