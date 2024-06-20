@@ -1,0 +1,36 @@
+name: Build-webserver-image-ECR
+run-name: Build Webserver from ${{ github.ref_name }} branch
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Build-Webserver-Image:
+    name: Build Webserver-Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.GITHUB_ROLE }}
+          role-session-name: Github
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'true'
+
+      - name: Build, Tag and Push Webserver Image to Amazon ECR
+        id: build-image
+        run: |
+          DOCKER_BUILDKIT=1 docker build -t ${{ steps.login-ecr.outputs.registry }}/demo-webserver:latest .
+          docker push ${{ steps.login-ecr.outputs.registry }}/demo-webserver:latest
