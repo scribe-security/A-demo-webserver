@@ -1,0 +1,15 @@
+name: "SLSA 3"
+defaults:
+  evidence:
+    signed: true
+    labels:
+      - "asset_type=repository"
+      - '{{ .Args.RepoAsset }}'
+
+rules:
+  - uses: slsa3/no-cache-usage@v1
+    name: "SLSA3-no-cache-usage"
+  - uses: slsa3/no-org-secrets@v1
+    name: "SLSA3-no-org-secrets"
+  - uses: slsa3/ephemeral-runners-only@v1
+    name: "SLSA3-ephemeral-runenrs-only"
