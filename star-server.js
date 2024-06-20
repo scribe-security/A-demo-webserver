@@ -7,6 +7,7 @@ const port = 3000;
 // Replace with the actual URL of the random-values-app API
 // apiEndpoint = 'http://python-api:5000/api/endpoint'; // Adjust the endpoint as needed
 const apiEndpoint = process.env.API_URL + '/api/endpoint';
+console.log(apiEndpoint);
 
 // Function to draw a star
 function drawStar(ctx, n, r, x, y) {
