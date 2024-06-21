@@ -160,7 +160,7 @@ jobs:
         
         with:
           scribe-enable: true
-          product-key:  ${{ env.APP_NAME }}
+          product-key:  Star-Generator
           product-version: "v0.0.1-discovery-demo"
           attest-default: x509-env
           
@@ -171,7 +171,6 @@ jobs:
           rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
           git-branch: SLSA-3-Compliance
           skip-bundle: false
-          scribe-url: https://api.scribesecurity.com
 
 
 
