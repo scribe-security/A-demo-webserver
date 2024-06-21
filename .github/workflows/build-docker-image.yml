@@ -91,14 +91,13 @@ jobs:
           product-version: "v0.0.1-discovery-demo"
           attest-default: x509-env
           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
-          scribe-client-secret: ${{ secrets.VALINT_SCRIBE_AUTH_CLIENT_SECRET_DEV_MIKEY }}
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
           format: attest
           config: .valint.yaml
           rule: signed-commits-rule.yaml
           rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
           git-branch: github_rules
           skip-bundle: false
-          scribe-url: https://api.dev.scribesecurity.com
 
       - name: Verify SLSA 3
         uses: scribe-security/action-verify@master
@@ -112,14 +111,13 @@ jobs:
           product-version: "v0.0.1-discovery-demo"
           attest-default: x509-env
           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
-          scribe-client-secret: ${{ secrets.VALINT_SCRIBE_AUTH_CLIENT_SECRET_DEV_MIKEY }}
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
           format: attest
           config: .valint.yaml
           policy: slsa3-policy.yaml
           rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
           git-branch: SLSA-3-Compliance
           skip-bundle: false
-          scribe-url: https://api.dev.scribesecurity.com
   
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
