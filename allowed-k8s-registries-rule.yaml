@@ -1,0 +1,9 @@
+uses: k8s/allowed-registries@v1
+
+evidence:
+  signed: true
+
+with:
+    allowed_registries:
+        - "335681522553.dkr.ecr.us-west-2.amazonaws.com"
+        - "docker.io/bitnami"
