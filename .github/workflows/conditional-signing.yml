@@ -1,10 +1,9 @@
-name: conditional-signing
-
+name: simple-build-policy
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-  PRODUCT_VERSION: 0.9.1
+  PRODUCT_VERSION: 0.1.29
   IMAGE_NAME: star-generator
-  APP_NAME: Sky-Mapper
+  APP_NAME: Star-Generator
   VALINT_BOM_AUTHOR_NAME: Guy-Chernobrov
   VALINT_BOM_AUTHOR_EMAIL: gc@scribesecurity.com
   VALINT_BOM_AUTHOR_PHONE: 052-9281309
@@ -27,47 +26,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  attest-checkout:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 17
-
-      - name: Install dependencies
-        run: npm install --save-exact
-   
-           
-      - name: Generate signed SBOM for repo content clone
-        uses: scribe-security/action-bom@master
-        with:
-            target: 'git:.'
-            scribe-enable: true
-            product-key: ${{ env.APP_NAME }}
-            product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-            scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-            components: commits,packages,files,dep
-            format: attest
-            config: .valint.yaml
-            verbose: 2
-            deliverable: true
-            
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: evidence
-          path: scribe/valint/*.json*
-  
-  
   build-docker-image:
     runs-on: ubuntu-latest
     permissions:
@@ -94,7 +52,21 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
 
-      - name: Generate unsigned SBOM for docker image
+ 
+  
+  image-evidence:
+    needs: 
+    - build-docker-image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+           fetch-depth: 0
+      - name: Generate SBOM evidence for docker image
         uses: scribe-security/action-bom@master
         with:
            target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
@@ -103,20 +75,57 @@ jobs:
            product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
            # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
            scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+           config: .valint.yaml
            label: "Flamingo"
-
-      - name: Verify signed SBOM for docker image
+  tests:
+    needs: 
+    - build-docker-image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: integration-test
+        run: sleep 30
+        shell: bash          
+  enforce:
+    needs: 
+    - tests
+    - image-evidence
+    
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+           fetch-depth: 0
+      - name: Verify critial vulns
         uses: scribe-security/action-verify@master
         with:
           scribe-enable: true
           product-key:  ${{ env.APP_NAME }}
           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-          # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-          label: "Flamingo"
+          config: .valint.yaml
           rule: critical-vulns-rule.yaml
           skip-bundle: false
-     
+          verbose: 2
+
+  sign:
+    needs: enforce
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+           fetch-depth: 0
+
       - name: Generate signed SBOM for docker image
         uses: scribe-security/action-bom@master
         with:
@@ -129,8 +138,6 @@ jobs:
           format: attest
           config: .valint.yaml
           label: "Flamingo"
-
-
       - uses: actions/upload-artifact@v2
         with:
           name: provenance
