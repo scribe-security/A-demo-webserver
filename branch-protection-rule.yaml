@@ -1,4 +1,4 @@
-uses: v1/github/repository/branch-protection@v1
+uses: github/repository/branch-protection@v1
 level: error
 
 evidence:
