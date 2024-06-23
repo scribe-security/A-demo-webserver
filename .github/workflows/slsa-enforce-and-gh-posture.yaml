@@ -176,6 +176,7 @@ jobs:
           ATTEST_KEY: ${{ secrets.ATTEST_KEY }}
           ATTEST_CERT: ${{ secrets.ATTEST_CERT }}
           ATTEST_CA: ${{ secrets.ATTEST_CA }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           scribe-enable: true
           product-key:  ${{ env.APP_NAME }}
