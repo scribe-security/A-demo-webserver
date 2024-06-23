@@ -26,7 +26,67 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  verify-signed-commits:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Verify signed commits
+        uses: scribe-security/action-verify@master
+        env:
+          ATTEST_KEY: ${{ secrets.ATTEST_KEY }}
+          ATTEST_CERT: ${{ secrets.ATTEST_CERT }}
+          ATTEST_CA: ${{ secrets.ATTEST_CA }}
+        with:
+          scribe-enable: true
+          product-key:  Star-Generator
+          product-version: "v0.0.1-discovery-demo"
+          attest-default: x509-env
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          format: attest
+          config: .valint.yaml
+          rule: signed-commits-rule.yaml
+          rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
+          git-branch: SLSA-3-Compliance
+          skip-bundle: false
+
+  source-sbom-verification:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Verify source SBOM
+        uses: scribe-security/action-verify@master
+        env:
+          ATTEST_KEY: ${{ secrets.ATTEST_KEY }}
+          ATTEST_CERT: ${{ secrets.ATTEST_CERT }}
+          ATTEST_CA: ${{ secrets.ATTEST_CA }}
+        with:
+          target: 'git:.'
+          scribe-enable: true
+          product-key: ${{ env.APP_NAME }}
+          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+          attest-default: x509-env
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          format: attest
+          config: .valint.yaml
+          rule: sbom/artifact-signed@v1
+          skip-bundle: false
+  
   build-docker-image:
+    needs:
+    - verify-signed-commits
+    - source-sbom-verification
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -52,70 +112,9 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
 
- 
-  
-  image-evidence:
-    needs: 
-    - build-docker-image
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-           fetch-depth: 0
-      - name: Generate SBOM evidence for docker image
-        uses: scribe-security/action-bom@master
-        with:
-           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
-           scribe-enable: true
-           product-key:  ${{ env.APP_NAME }}
-           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
-           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-           config: .valint.yaml
-           label: "Flamingo"
-  tests:
-    needs: 
-    - build-docker-image
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: integration-test
-        run: sleep 30
-        shell: bash          
-  enforce:
-    needs: 
-    - tests
-    - image-evidence
-    
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-           fetch-depth: 0
-      - name: Verify critial vulns
-        uses: scribe-security/action-verify@master
-        with:
-          scribe-enable: true
-          product-key:  ${{ env.APP_NAME }}
-          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-          config: .valint.yaml
-          rule: critical-vulns-rule.yaml
-          skip-bundle: false
-          verbose: 2
-
   sign:
-    needs: enforce
+    needs:
+      - build-docker-image
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -125,9 +124,12 @@ jobs:
         uses: actions/checkout@v3
         with:
            fetch-depth: 0
-
       - name: Generate signed SBOM for docker image
         uses: scribe-security/action-bom@master
+        env:
+          ATTEST_KEY: ${{ secrets.ATTEST_KEY }}
+          ATTEST_CERT: ${{ secrets.ATTEST_CERT }}
+          ATTEST_CA: ${{ secrets.ATTEST_CA }}
         with:
           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
           scribe-enable: true
@@ -136,6 +138,7 @@ jobs:
           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
           format: attest
+          attest-default: x509-env
           config: .valint.yaml
           label: "Flamingo"
       - uses: actions/upload-artifact@v2
