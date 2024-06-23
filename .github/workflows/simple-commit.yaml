@@ -2,7 +2,7 @@ name: Simple-commit
 
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-  PRODUCT_VERSION: 0.1.29
+  PRODUCT_VERSION: 0.3.30
   IMAGE_NAME: star-generator
   APP_NAME: Star-Generator
   VALINT_BOM_AUTHOR_NAME: Guy-Chernobrov
@@ -49,10 +49,6 @@ jobs:
            
       - name: Generate signed SBOM for repo content clone
         uses: scribe-security/action-bom@master
-        env:
-          ATTEST_KEY: ${{ secrets.ATTEST_KEY }}
-          ATTEST_CERT: ${{ secrets.ATTEST_CERT }}
-          ATTEST_CA: ${{ secrets.ATTEST_CA }}
         with:
             target: 'git:.'
             scribe-enable: true
@@ -61,7 +57,6 @@ jobs:
             scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
             components: commits,packages,files,dep
             format: attest
-            attest-default: x509-env
             config: .valint.yaml
             verbose: 2
             label: is_git_commit
