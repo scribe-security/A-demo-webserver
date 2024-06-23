@@ -139,7 +139,7 @@ jobs:
         run: sleep 30
         shell: bash          
   
-  provenance-deploy:
+  policy-gate:
     needs:
       - tests
       - attest-image
