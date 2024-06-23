@@ -52,7 +52,7 @@ jobs:
           config: .valint.yaml
           rule: signed-commits-rule.yaml
           rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
-          git-branch: SLSA-3-Compliance
+          git-branch: github_rules
           skip-bundle: false
 
   source-sbom-verification:
