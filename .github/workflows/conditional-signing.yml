@@ -83,7 +83,7 @@ jobs:
           format: attest
           attest-default: x509-env
           config: .valint.yaml
-          rule: verify-signed-commits.yaml
+          rule: verify-signed-source-sbom.yaml
           skip-bundle: false
           verbose: 2
   

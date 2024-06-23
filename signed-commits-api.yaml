@@ -1,4 +1,9 @@
 uses: github/signed-commits-gh-api-fetch-range@v1
+level: error
+
+evidence:
+  format-type: cyclonedx-json
+  signed: true
 
 with:
   access_token: '{{ .Env.GITHUB_TOKEN }}'
