@@ -140,7 +140,9 @@ jobs:
         shell: bash          
   
   provenance-deploy:
-    needs: tests
+    needs:
+      - tests
+      - attest-image
     runs-on: ubuntu-latest
     permissions:
       contents: read
