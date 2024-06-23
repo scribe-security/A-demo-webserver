@@ -1,5 +1,5 @@
 uses: github/signed-commits-gh-api-fetch-range@v1
-name: Verify Signed Commits
+name: verify-signed-commits
 level: error
 
 evidence:

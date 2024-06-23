@@ -1,3 +1,3 @@
 uses: sbom/artifact-signed@v1
-name: Verify Signed Source SBOM
+name: verify-signed-sbom
 level: error
