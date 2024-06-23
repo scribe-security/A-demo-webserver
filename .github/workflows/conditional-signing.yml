@@ -145,10 +145,6 @@ jobs:
           attest-default: x509-env
           config: .valint.yaml
           label: "Flamingo"
-      - uses: actions/upload-artifact@v2
-        with:
-          name: provenance
-          path: ${{ steps.slsa_provenance.outputs.OUTPUT_PATH }} 
            
            
 
