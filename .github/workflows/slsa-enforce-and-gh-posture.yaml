@@ -186,7 +186,7 @@ jobs:
           format: attest
           config: .valint.yaml
           policy: slsa3-policy.yaml
-          rule: signed-commits-api.yaml,verify-signed-source-sbom.yaml
+          rule: signed-commits-api.yaml,verify-signed-source-sbom.yaml,branch-protection-rule.yaml
           rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_,Repo=${{ github.event.repository.name }},Owner=${{ github.event.repository.owner.login }},HEAD=${{ github.sha }}
           git-branch: slsa3_demo
           skip-bundle: false
