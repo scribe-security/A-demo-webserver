@@ -1,0 +1,2 @@
+uses: sbom/artifact-signed@v1
+level: error

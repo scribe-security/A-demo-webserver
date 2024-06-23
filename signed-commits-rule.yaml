@@ -1,5 +1,5 @@
 uses: repository/check-signed-commits@v1
-level: warning
+level: error
 
 evidence:
   signed: true
