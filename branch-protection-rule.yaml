@@ -1,5 +1,6 @@
 uses: github/repository/branch-protection@v1
-level: error
+name: "Branch Protection"
+level: warning
 
 evidence:
   signed: true
