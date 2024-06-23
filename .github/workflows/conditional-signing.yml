@@ -50,9 +50,9 @@ jobs:
           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
           format: attest
           config: .valint.yaml
-          rule: signed-commits-rule.yaml
-          rule-args: RepoAsset=asset=scribe-security__A-demo-webserver_
-          git-branch: github_rules
+          rule: signed-commits-api.yaml
+          rule-args: Repo=${{ github.event.repository.name }},Owner=${{ github.event.repository.owner.login }},HEAD=${{ github.sha }}
+          git-branch: Signed-Commits
           skip-bundle: false
           verbose: 2
 
