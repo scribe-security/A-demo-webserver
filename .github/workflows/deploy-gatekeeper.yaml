@@ -46,6 +46,7 @@ jobs:
     
       - name: Upgrade and Install Helm Charts
         run: |
+          curl -sSfL https://raw.githubusercontent.com/scribe-security/gatekeeper-valint/main/scripts/generate-tls-cert.sh | bash
           helm repo add scribe https://scribe-security.github.io/gatekeeper-valint
           helm repo update
           helm install scribe/gatekeeper-valint --name-template=gatekeeper-valint \
