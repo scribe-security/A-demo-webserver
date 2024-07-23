@@ -46,12 +46,10 @@ jobs:
     
       - name: Upgrade and Install Helm Charts
         run: |
-          helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
-          helm repo update
-          helm list
-          helm install gatekeeper/gatekeeper  \
-            --name-template=gatekeeper \
-            --namespace gatekeeper-system --create-namespace \
-            --set enableExternalData=true \
-            --set controllerManager.dnsPolicy=ClusterFirst,audit.dnsPolicy=ClusterFirst \
-            --set validatingWebhookTimeoutSeconds=30
+          helm install scribe/gatekeeper-valint --name-template=gatekeeper-valint \
+            --namespace gatekeeper-valint --create-namespace \
+            --set certs.caBundle=$(cat certs/ca.crt | base64 | tr -d '\n') \
+            --set certs.tlsCrt="$(cat certs/tls.crt)" \
+            --set certs.tlsKey="$(cat certs/tls.key)" \
+            --set scribe.enable=true \
+            --set scribe.client_secret=$SCRIBE_TOKEN
