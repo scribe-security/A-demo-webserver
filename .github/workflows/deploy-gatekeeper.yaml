@@ -46,7 +46,7 @@ jobs:
     
       - name: Upgrade and Install Helm Charts
         run: |
-          helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
+          helm repo add gatekeepernew https://open-policy-agent.github.io/gatekeeper/charts
           helm repo update
           
           helm install gatekeeper/gatekeeper  \
