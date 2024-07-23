@@ -1,1 +1,50 @@
+name: Deploy Gatekeeper Helm Workflow
+run-name: Deploy Helm Chart from ${{ github.ref_name }} branch
 
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  workflow_dispatch:
+      
+jobs:
+
+  Deploy-Webserver:
+    name: Deploy Webserver Helm Chart
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_GITHUB_ROLE }}
+          role-session-name: Github
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Run AWS CLI commands
+        shell: bash
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          EKS_CLUSTER: ${{ secrets.EKS_CLUSTER }}  
+        run: |
+          aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER }} --region ${{ secrets.AWS_REGION }}
+
+      - uses: marcofranssen/setup-kubectl@v0.3.0
+        with:
+          enablePlugins: true
+          plugins: aws-auth,grep
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.15.1
+    
+      - name: Upgrade and Install Helm Charts
+        run: |
+          cd Helm-chart
+          helm upgrade -i webserver . -n demo
