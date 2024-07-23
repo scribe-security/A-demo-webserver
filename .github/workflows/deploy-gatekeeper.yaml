@@ -48,6 +48,7 @@ jobs:
         run: |
           helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
           helm repo update
+          helm list
           helm delete gatekeeper
           helm install gatekeeper/gatekeeper  \
             --name-template=gatekeeper \
