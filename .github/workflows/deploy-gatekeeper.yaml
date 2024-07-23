@@ -48,7 +48,8 @@ jobs:
         run: |
           helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
           helm repo update
-          helm upgrade -i gatekeeper/gatekeeper  \
+          helm install gatekeeper/gatekeeper  \
+            --force \
             --name-template=gatekeeper \
             --namespace gatekeeper-system \
             --set enableExternalData=true \
