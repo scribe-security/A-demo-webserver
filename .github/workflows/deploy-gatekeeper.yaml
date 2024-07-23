@@ -46,6 +46,8 @@ jobs:
     
       - name: Upgrade and Install Helm Charts
         run: |
+          helm repo add scribe https://scribe-security.github.io/gatekeeper-valint
+          helm repo update
           helm install scribe/gatekeeper-valint --name-template=gatekeeper-valint \
             --namespace gatekeeper-valint --create-namespace \
             --set certs.caBundle=$(cat certs/ca.crt | base64 | tr -d '\n') \
