@@ -50,7 +50,7 @@ jobs:
           helm repo update
           
           helm install gatekeeper/gatekeeper  \
-            --name-template=gatekeeper \
+            --name-template=gatekeepernew \
             --namespace gatekeeper-system \
             --set enableExternalData=true \
             --set controllerManager.dnsPolicy=ClusterFirst,audit.dnsPolicy=ClusterFirst \
