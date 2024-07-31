@@ -2,7 +2,7 @@ name: attest-star-server-commit
 
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-  PRODUCT_VERSION: 0.9.3
+  PRODUCT_VERSION: 1.0.7
   IMAGE_NAME: star-generator
   APP_NAME: Sky-Mapper
   VALINT_BOM_AUTHOR_NAME: Guy-Chernobrov
