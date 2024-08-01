@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: 335681522553.dkr.ecr.us-west-2.amazonaws.com/demo-webserver
+  repository: scribesecurity/sky-mapper
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -13,7 +13,8 @@ image:
     - name: API_URL
       value: "http://api.demo.svc.cluster.local:5000" 
 
-imagePullSecrets: []
+imagePullSecrets:
+  - name : docker-registry
 nameOverride: ""
 fullnameOverride: ""
 
