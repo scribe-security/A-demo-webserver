@@ -14,7 +14,7 @@ image:
       value: "http://api.demo.svc.cluster.local:5000" 
 
 imagePullSecrets:
-  - name : docker-registry
+  - name : docker-registry-web
 nameOverride: ""
 fullnameOverride: ""
 
