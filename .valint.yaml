@@ -44,7 +44,7 @@ evidence:
 attest:
   config: ""
   bundle: https://github.com/scribe-public/sample-policies
-  skip-bundle: false
+  skip-bundle: true
   policy_configs: []
   rule_configs: []
   label_filters: []
