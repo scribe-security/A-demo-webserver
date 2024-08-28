@@ -88,15 +88,13 @@ resources: {}
   #   memory: 128Mi
 
 livenessProbe:
-  enabled: false
   httpGet:
     path: /
-    port: http
+    port: 3000
 readinessProbe:
-  enabled: false
   httpGet:
     path: /
-    port: http
+    port: 3000
 
 autoscaling:
   enabled: false
