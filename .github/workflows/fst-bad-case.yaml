@@ -82,11 +82,11 @@ jobs:
           STEP_NAME: Install app dependencies
         run: npm install
 
-      - name: Build app
-        id: build-app
-        env:
-          STEP_NAME: Build app
-        run: npm run build
+      #- name: Build app
+      #  id: build-app
+      #  env:
+      #    STEP_NAME: Build app
+      #  run: npm run build
 
       - name: Build C demo app
         id: build-c-demo-app
