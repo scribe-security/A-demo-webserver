@@ -3,7 +3,7 @@ env:
   FS_DIGEST: ":v0.0.23"
   FS_NAME: fs-tracker-${{ github.run_id }}
   FS_DIR: /tmp/fs-tracker-${{ github.run_id }}
-  VALINT_PRODUCT_VERSION: v0.1
+  VALINT_PRODUCT_VERSION: 1.0.8
 
 on:
   workflow_dispatch:
@@ -149,14 +149,14 @@ jobs:
       - name: verbose ls
         run: ls -lhR ${{ env.FS_DIR }}
 
-      - name: Create product on SH
-        uses: scribe-security/action-bom-cli@master
-        with:
-          target: alpine:latest
-          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-          product-key: dhs-vue-sample-fst-failing
-          product-version: ${{ env.VALINT_PRODUCT_VERSION }}
-          format: statement
+    #  - name: Create product on SH
+    #    uses: scribe-security/action-bom-cli@master
+    #    with:
+    #      target: alpine:latest
+    #      scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+    #      product-key: Sky-Mapper
+    #      product-version: ${{ env.VALINT_PRODUCT_VERSION }}
+    #      format: statement
 
       - name: Valint Evidence Upload
         uses: scribe-security/action-evidence-cli@master
@@ -165,14 +165,14 @@ jobs:
           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
           output-format: statement-generic
           predicate-type: http://scribesecurity.com/evidence/generic_fs_tracker
-          product-key: dhs-vue-sample-fst-failing
+          product-key: Sky-Mapper
           product-version: ${{ env.VALINT_PRODUCT_VERSION }}
 
       - name: Valint Verify
         uses: scribe-security/action-verify-cli@dev
         with:
           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-          product-key: dhs-vue-sample-fst-failing
+          product-key: Sky-Mapper
           product-version: ${{ env.VALINT_PRODUCT_VERSION }}
           bundle-branch: Superset-Policy
           policy: fst-policy.yaml
@@ -193,7 +193,7 @@ jobs:
       #   with:
       #     verbose: 2
       #     scribe-client-secret: ${{ secrets.SCRIBE_DEMO_PROD_CLIENT_SECRET }}
-      #     product-key: dhs-vue-sample-fst-failing
+      #     product-key: Sky-Mapper
       #     product-version: ${{ env.VALINT_PRODUCT_VERSION }}
       #     bundle-branch: Superset-Policy
       #     rule: superset/prevent-src-mod@v1
