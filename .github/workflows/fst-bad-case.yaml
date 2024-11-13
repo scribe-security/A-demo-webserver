@@ -93,7 +93,7 @@ jobs:
         env:
           STEP_NAME: Build C demo app
         run: |
-          cp hello.c /dev/shm/hello.c
+          # cp hello.c /dev/shm/hello.c
           gcc -o hello /dev/shm/hello.c -fstack-protector-strong -fPIE -pie \
             -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,defs -fstack-clash-protection
 
