@@ -1,0 +1,200 @@
+name: fst-complete-workflow-test-modify
+env:
+  FS_DIGEST: ":v0.0.23"
+  FS_NAME: fs-tracker-${{ github.run_id }}
+  FS_DIR: /tmp/fs-tracker-${{ github.run_id }}
+  VALINT_PRODUCT_VERSION: v0.1
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  fs-tracker-vue-project-ci-job:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+      - name: Create fs-tracker work dir and rules file
+        id: create-fs-tracker-work-dir-and-rules-file
+        env:
+          STEP_NAME: Create fs-tracker work dir and rules file
+        run: |
+          mkdir -p  ${{ env.FS_DIR }}
+          # echo '{"ALL": {"filters": {"events": ["all"]}}}' >  ${{ env.FS_DIR }}/rules.json
+          echo '{"ALL": {"filters": {"events": ["exec", "write", "output", "create", "input"]}}}' >  ${{ env.FS_DIR }}/rules.json
+          
+
+      - name: Start fs-tracker container
+        id: start-fs-tracker-container
+        env:
+          STEP_NAME: Start fs-tracker container
+        run: >
+          docker run -d 
+          --privileged 
+          --pid=host 
+          --userns=host
+          --name ${{ env.FS_NAME }}
+          -v /proc:/proc 
+          -v /etc/passwd:/etc/passwd 
+          -v  ${{ env.FS_DIR }}:/work 
+          -w /work 
+          scribesecuriy.jfrog.io/scribe-docker-public-local/fs-tracker${{ env.FS_DIGEST }}
+
+      - name: Wait for fs-tracker initialisation
+        id: fs-tracker-initialization
+        env:
+          STEP_NAME: Wait for fs-tracker initialisation
+        run: |
+          while [ $(docker container inspect  ${{ env.FS_NAME }} --format {{.State.Status}}) == "running" ]
+          do
+            if docker logs  ${{ env.FS_NAME }} 2>/dev/null | grep '^Ready!' >/dev/null
+            then
+              echo Ready!
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Clone repo
+        id: clone-repo
+        env:
+          STEP_NAME: Clone repo
+        uses: actions/checkout@v3
+
+      - name: Modify Dockerfile
+        run: |
+          echo 'ENTRYPOINT ["/bin/bash"]' >> Dockerfile
+
+      # - name: Create Soureces SBOM
+      #   id: valint-sources
+      #   run: valint bom git:$(pwd) --output-file source-sbom.json --components files,dep,commits
+
+      - name: Install app dependencies
+        env:
+          STEP_NAME: Install app dependencies
+        run: npm install
+
+      - name: Build app
+        id: build-app
+        env:
+          STEP_NAME: Build app
+        run: npm run build
+
+      - name: Build C demo app
+        id: build-c-demo-app
+        env:
+          STEP_NAME: Build C demo app
+        run: |
+          cp hello.c /dev/shm/hello.c
+          gcc -o hello /dev/shm/hello.c -fstack-protector-strong -fPIE -pie \
+            -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,defs -fstack-clash-protection
+
+
+      # - name: Create build SBOM
+      #   id: valint-build
+      #   run: valint bom dir:. --output-file build-sbom.json --components metadata,packages,files,dep -vv
+
+      # - name: Compress build artifacts
+      #   id: compress-build-artifacts
+      #   env:
+      #     STEP_NAME: Compress build artifacts
+      #   run: |
+      #     tar -cJf dist.tar.xz dist
+
+      # - name: Archive build artifacts
+      #   id: archive-build-artifacts
+      #   env:
+      #     STEP_NAME: Archive build artifacts
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: build-artifacts
+      #     path: |
+      #       dist.tar.xz
+      #       source-sbom.json
+      #       build-sbom.json
+
+      - name: Stop fs-tracker
+        id: stop-fs-tracker
+        env:
+          STEP_NAME: Stop fs-tracker
+        run: |
+          docker stop ${{ env.FS_NAME }}
+          docker logs  ${{ env.FS_NAME }}
+          EXIT_CODE=$(docker wait  ${{ env.FS_NAME }})
+          docker rm --force  ${{ env.FS_NAME }}
+
+      - name: Validate fs-tracker logs
+        id: validate-fs-tracker-logs
+        env:
+          STEP_NAME: Validate fs-tracker logs
+        run: |
+          python -m json.tool ${{ env.FS_DIR }}/processes.json > /dev/null
+          python -m json.tool ${{ env.FS_DIR }}/events.json > /dev/null
+
+      - name: Compress fs-tracker logs
+        id: compress-fs-tracker-logs
+        env:
+          STEP_NAME: Compress fs-tracker logs
+        run: |
+          tar -cJf  ${{ env.FS_DIR }}/fs-tracker-logs.tar.xz --verbose -C  ${{ env.FS_DIR }} processes.json events.json
+
+      - name: verbose ls
+        run: ls -lhR ${{ env.FS_DIR }}
+
+      - name: Create product on SH
+        uses: scribe-security/action-bom-cli@master
+        with:
+          target: alpine:latest
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          product-key: dhs-vue-sample-fst-failing
+          product-version: ${{ env.VALINT_PRODUCT_VERSION }}
+          format: statement
+
+      - name: Valint Evidence Upload
+        uses: scribe-security/action-evidence-cli@master
+        with:
+          target: ${{ env.FS_DIR }}/fs-tracker-logs.tar.xz
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          output-format: statement-generic
+          predicate-type: http://scribesecurity.com/evidence/generic_fs_tracker
+          product-key: dhs-vue-sample-fst-failing
+          product-version: ${{ env.VALINT_PRODUCT_VERSION }}
+
+      - name: Valint Verify
+        uses: scribe-security/action-verify-cli@dev
+        with:
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          product-key: dhs-vue-sample-fst-failing
+          product-version: ${{ env.VALINT_PRODUCT_VERSION }}
+          bundle-branch: Superset-Policy
+          policy: fst-policy.yaml
+          timeout: 20m
+
+      - name: Archive fs-tracker logs
+        id: archive-fs-tracker-logs
+        env:
+          STEP_NAME: Archive fs-tracker logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: fs-tracker-logs
+          path: |
+            ${{ env.FS_DIR }}/fs-tracker-logs.tar.xz
+          
+      # - name: Valint Verify Superset Rules
+      #   uses: scribe-security/action-verify@master
+      #   with:
+      #     verbose: 2
+      #     scribe-client-secret: ${{ secrets.SCRIBE_DEMO_PROD_CLIENT_SECRET }}
+      #     product-key: dhs-vue-sample-fst-failing
+      #     product-version: ${{ env.VALINT_PRODUCT_VERSION }}
+      #     bundle-branch: Superset-Policy
+      #     rule: superset/prevent-src-mod@v1
+          
