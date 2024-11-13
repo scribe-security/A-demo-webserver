@@ -129,17 +129,38 @@ jobs:
            scribe-enable: true
            product-key:  ${{ env.APP_NAME }}
            product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
            scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
            format: attest
            config: .valint.yaml
 
-
-      - uses: actions/upload-artifact@v2
+      - name: verify slsa2
+        id: slsa_ver2
+        uses: scribe-security/action-verify@master
         with:
-          name: provenance
-          path: ${{ steps.slsa_provenance.outputs.OUTPUT_PATH }} 
-           
+           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
+           scribe-enable: true
+           product-key:  ${{ env.APP_NAME }}
+           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+           format: attest
+           config: .valint.yaml
+           rule: slsa/l2-provenance-authenticated@v1
+           verbose: 2
+      - name: verify slsa1
+        id: slsa_ver1
+        uses: scribe-security/action-verify@master
+        with:
+           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
+           scribe-enable: true
+           product-key:  ${{ env.APP_NAME }}
+           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+           format: attest
+           config: .valint.yaml
+           verbose: 2
+           rule: slsa/l1-provenance-exists@v1
+           # bundle-branch: main
+     
            
 
 
