@@ -57,9 +57,10 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
           docker --help
-          ls -lh $HOME
+          ls -lha $HOME
           ls -lh $HOME/.docker || true
-  
+          ls -lh $HOME/.docker/cli-plugins || true
+
       - name: Run Scribe Docker Plugin
         run: |
           docker policy ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}} \
