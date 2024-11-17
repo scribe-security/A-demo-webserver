@@ -56,7 +56,9 @@ jobs:
       - name: Install Scribe Docker Plugin
         run: |
           curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh
-          docker -h
+          docker --help
+          ls -lh $HOME
+          ls -lh $HOME/.docker || true
   
       - name: Run Scribe Docker Plugin
         run: |
@@ -66,8 +68,6 @@ jobs:
            --product-version ${{ env.PRODUCT_VERSION }} \
            --output-directory output_evidence \
            --bundle-branch SH-6730-docker-plugin
-
-  
 
   # policy-docker-image:
   #   runs-on: ubuntu-latest
