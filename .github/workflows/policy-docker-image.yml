@@ -1,4 +1,4 @@
-name: build-pipeline-signed
+name: docker-plugin-check
 
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
@@ -27,7 +27,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-docker-image:
+  policy-docker-image:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -50,7 +50,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          push: true
+          push: false
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
            
       - name: Install Scribe Docker Plugin
