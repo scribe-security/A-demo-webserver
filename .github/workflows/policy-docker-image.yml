@@ -61,9 +61,6 @@ jobs:
           ls -lh $HOME/.docker || true
           ls -lh $HOME/.docker/cli-plugins || true
 
-      - name: Get Trivy
-        run: curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b ~
-  
       - name: Run Scribe Docker Plugin
         run: |
           docker policy ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}} \
