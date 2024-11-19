@@ -61,11 +61,23 @@ jobs:
           ls -lh $HOME/.docker || true
           ls -lh $HOME/.docker/cli-plugins || true
 
+      - uses: aquasecurity/trivy-action@0.28.0
+        name: Run Trivy
+        with:
+          image-ref: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+          format: 'sarif'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          output: 'trivy-report.sarif.json'
+          # severity: 'CRITICAL,HIGH'
+
       - name: Run Scribe Docker Plugin
         run: |
           docker policy ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}} \
            --select scout \
            -o attest \
+           --input-evidence trivy:trivy-report.sarif.json \
            --product-version ${{ env.PRODUCT_VERSION }} \
            --output-directory output_evidence \
            --bundle-branch SH-6730-docker-plugin
