@@ -79,7 +79,7 @@ jobs:
            -o attest \
            --product-version ${{ env.PRODUCT_VERSION }} \
            --output-directory output_evidence \
-           --output-file scout.results.sarif.json.sig \
+           --output-file scout.sarif.json.sig \
            --bundle-branch SH-6730-docker-plugin
 
       #           --input-evidence trivy:trivy-report.sarif.json \
@@ -87,6 +87,7 @@ jobs:
       - name: INFO
         run: |
           ls -lhR output_evidence
+          ls -lh
           cat scout.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' > scout.sarif.json
 
 
