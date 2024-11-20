@@ -77,35 +77,30 @@ jobs:
           docker policy ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}} \
            --select scout \
            -o attest \
-           --input-evidence trivy:trivy-report.sarif.json \
            --product-version ${{ env.PRODUCT_VERSION }} \
            --output-directory output_evidence \
+           --output-file scout.results.sarif.json.sig \
            --bundle-branch SH-6730-docker-plugin
-           
+
+      #           --input-evidence trivy:trivy-report.sarif.json \
+
       - name: INFO
         run: |
           ls -lhR output_evidence
+          cat scout.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' > scout.sarif.json
+
 
       - name: Upload evidence
         uses: actions/upload-artifact@v3
         with:
           name: evidence
-          path: output_evidence
+          path: |
+            output_evidence
+            scout.sarif.json
           retention-days: 1
 
-
-  # policy-docker-image:
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     id-token: write
-  #   steps:
-      
-  #     - name: Install Scribe Docker Plugin
-  #       run: |
-  #         curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh
-  #         docker -h
-
-  #     - name: Run Scribe Docker Plugin
-  #       run: |
-  #         docker policy ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+      # - name: Upload SARIF file
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: scout.sarif.json
+      #     category: supply-chain-policy
