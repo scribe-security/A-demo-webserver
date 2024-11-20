@@ -81,6 +81,18 @@ jobs:
            --product-version ${{ env.PRODUCT_VERSION }} \
            --output-directory output_evidence \
            --bundle-branch SH-6730-docker-plugin
+           
+      - name: INFO
+        run: |
+          ls -lhR output_evidence
+
+      - name: Upload evidence
+        uses: actions/upload-artifact@v3
+        with:
+          name: evidence
+          path: output_evidence
+          retention-days: 1
+
 
   # policy-docker-image:
   #   runs-on: ubuntu-latest
