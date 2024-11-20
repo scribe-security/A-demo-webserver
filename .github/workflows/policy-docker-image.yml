@@ -56,10 +56,6 @@ jobs:
       - name: Install Scribe Docker Plugin
         run: |
           curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
-          docker --help
-          ls -lha $HOME
-          ls -lh $HOME/.docker || true
-          ls -lh $HOME/.docker/cli-plugins || true
 
       # - uses: aquasecurity/trivy-action@0.28.0
       #   name: Run Trivy
@@ -84,13 +80,6 @@ jobs:
 
       #           --input-evidence trivy:trivy-report.sarif.json \
 
-      - name: INFO
-        run: |
-          ls -lhR output_evidence
-          ls -lh
-          cat scout.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' > scout.sarif.json
-
-
       - name: Upload evidence
         uses: actions/upload-artifact@v3
         with:
@@ -104,4 +93,4 @@ jobs:
       #   uses: github/codeql-action/upload-sarif@v3
       #   with:
       #     sarif_file: scout.sarif.json
-      #     category: supply-chain-policy
+      #     category: scout
