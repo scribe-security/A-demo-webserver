@@ -47,19 +47,21 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          push: false
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+        
+          
+
       - name: Action Policy
         uses: ./.github/actions/docker-policy-action
         with:
           target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
           select: scout
           # input: trivy:trivy-report.sarif.json
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          push: false
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-           
+  
       # - name: Install Scribe Docker Plugin
       #   run: |
       #     curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
@@ -75,37 +77,37 @@ jobs:
       #     output: 'trivy-report.sarif.json'
       #     # severity: 'CRITICAL,HIGH'
 
-      - name: Run Scribe Docker Plugin
-        run: |
-          docker policy ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}} \
-           --select scout \
-           -o attest \
-           --product-version ${{ env.PRODUCT_VERSION }} \
-           --output-directory output_evidence \
-           --output-file valint.sarif.json.sig \
-           --bundle-branch SH-6730-docker-plugin
+      # - name: Run Scribe Docker Plugin
+      #   run: |
+      #     docker policy ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}} \
+      #      --select scout \
+      #      -o attest \
+      #      --product-version ${{ env.PRODUCT_VERSION }} \
+      #      --output-directory output_evidence \
+      #      --output-file valint.sarif.json.sig \
+      #      --bundle-branch SH-6730-docker-plugin
 
-      #           --input-evidence trivy:trivy-report.sarif.json \
+      # #           --input-evidence trivy:trivy-report.sarif.json \
 
-      - name: Extract Sarif file
-        run: |
-          mkdir results
-          cat  valint.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' | jq '.content' >  results/valint.sarif.json
-          ls -lh
-          cat results/valint.sarif.json
+      # - name: Extract Sarif file
+      #   run: |
+      #     mkdir results
+      #     cat  valint.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' | jq '.content' >  results/valint.sarif.json
+      #     ls -lh
+      #     cat results/valint.sarif.json
 
 
-      - name: Upload evidence
-        uses: actions/upload-artifact@v3
-        with:
-          name: evidence
-          path: |
-            output_evidence
-            valint.sarif.json
-          retention-days: 1
+      # - name: Upload evidence
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: evidence
+      #     path: |
+      #       output_evidence
+      #       valint.sarif.json
+      #     retention-days: 1
 
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: valint.sarif.json
-          category: scout
+      # - name: Upload SARIF file
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: valint.sarif.json
+      #     category: scout
