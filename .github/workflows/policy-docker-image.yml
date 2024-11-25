@@ -53,6 +53,14 @@ jobs:
           push: false
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
            
+
+      - name: Action Policy
+        uses: ./github/actions/docker-policy-action
+        with:
+          target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+          select: scout
+          # input: trivy:trivy-report.sarif.json
+
       - name: Install Scribe Docker Plugin
         run: |
           curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
@@ -82,9 +90,10 @@ jobs:
 
       - name: Extract Sarif file
         run: |
-          cat  scout.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' | jq '.content' >  scout.sarif.json
+          mkdir results
+          cat  valint.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' | jq '.content' >  results/valint.sarif.json
           ls -lh
-          cat scout.sarif.json
+          cat results/valint.sarif.json
 
 
       - name: Upload evidence
@@ -93,11 +102,11 @@ jobs:
           name: evidence
           path: |
             output_evidence
-            scout.sarif.json
+            valint.sarif.json
           retention-days: 1
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: scout.sarif.json
+          sarif_file: valint.sarif.json
           category: scout
