@@ -80,6 +80,12 @@ jobs:
 
       #           --input-evidence trivy:trivy-report.sarif.json \
 
+      - name: Extract Sarif file
+        run: |
+          cat  scout.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' >  scout.sarif.json
+          ls -lh
+
+
       - name: Upload evidence
         uses: actions/upload-artifact@v3
         with:

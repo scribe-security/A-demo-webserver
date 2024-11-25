@@ -1,0 +1,19 @@
+name: Scribe Docker Policy Action
+description: Verify compliance policies against evidence to ensure the integrity of supply chain.
+author: Mikey Strauss
+inputs:
+  target:
+    description: Target object name format=[<image:tag>, <dir path>, <git url>]
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      name: Install valint
+      run: |2-
+        // Check if `docker policy` is not installed [FIX]
+        if ! command -v docker > /dev/null || ! docker policy --help > /dev/null 2>&1; then
+           curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
+        fi
+
+    
