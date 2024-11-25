@@ -62,6 +62,7 @@ jobs:
           select: scout
           product-key: demo-server
           product-version: ${{env.GITHUB_RUN_NUM}}
+          output-directory: evidence
           args: |
             --bundle-branch SH-6730-docker-plugin
           
