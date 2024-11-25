@@ -11,6 +11,9 @@ inputs:
   input:
     description: Input evidence to verify against policy
     required: false
+  format:
+    description: Output Evidence format [statement attest]
+    required: false
   push-github-results:
     description: Push Results to github Security alerts
     required: false
@@ -72,9 +75,8 @@ runs:
       run: |
         echo "Running docker policy with target: ${{ inputs.target }}"
         docker policy ${{ inputs.target }} \
-
           --select ${{ inputs.select }} \
-          -o attest \
+          ${{ inputs.format && '--format=' }}${{ inputs.format }} \
           ${{ inputs.product-key && '--product-key=' }}${{ inputs.product-key}} \
           ${{ inputs.product-version && '--product-version=' }}${{ inputs.product-version}} \
           ${{ inputs.output-directory && '--output-directory=' }}${{ inputs.output-directory}} \
