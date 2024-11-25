@@ -65,42 +65,49 @@ runs:
           echo "Docker policy plugin installed successfully."
         fi
 
-    # - shell: bash
-    #   name: Run Scribe Docker Policy
-    #   run: |2-
-    #     // Run `docker policy` command
-    #     echo "docker policy ${{ inputs.target }} \
-    #       --select ${{ inputs.select }} \
-    #       -o attest \
-    #       --product-version ${{ env.PRODUCT_VERSION }} \
-    #       --output-directory output_evidence \
-    #       --output-file scout.sarif.json.sig \
-    #       --bundle-branch SH-6730-docker-plugin"
+    - shell: bash
+      name: Run Scribe Docker Policy
+      id: run_docker_policy
+      if: ${{ inputs.target }}
+      run: |
+        echo "Running docker policy with target: ${{ inputs.target }}"
+        docker policy ${{ inputs.target }} \
 
-    # - shell: bash
-    #   name: Extract Sarif file
-    #   run: |
-    #     mkdir results
-    #     cat  valint.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' | jq '.content' >  results/valint.sarif.json
-    #     ls -lh
-    #     cat results/valint.sarif.json
+          --select ${{ inputs.select }} \
+          -o attest \
+          ${{ inputs.product-key && '--product-key=' }}${{ inputs.product-key}} \
+          ${{ inputs.product-version && '--product-version=' }}${{ inputs.product-version}} \
+          ${{ inputs.output-directory && '--output-directory=' }}${{ inputs.output-directory}} \
+          ${{ inputs.output-file && '--output-file=' }}${{ inputs.output-file}} \
+          ${{ inputs.input && '--input=' }}${{ inputs.input}} \
+          ${{ inputs.args }}
 
+    # --bundle-branch SH-6730-docker-plugin \
+    - shell: bash
+      name: Extract SARIF file
+      if: ${{ steps.run_docker_policy.outputs.success == 'true' }}
+      run: |
+        mkdir -p results
+        echo "STEP OUTPUT" ${{ steps.run_valint.outputs.OUTPUT_PATH }}"
+        cat ${{ inputs.output-file || 'scout.sarif.json.sig' }} | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' | jq '.content' > results/valint.sarif.json
+        ls -lh results
+        cat results/valint.sarif.json
 
-    # - name: Upload evidence
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: evidence
-    #     path: |
-    #       output_evidence
-    #       valint.sarif.json
-    #     retention-days: 1
+    - name: Upload evidence
+      if: ${{ inputs.push-github-results == 'true' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: evidence
+        path: |
+          ${{ inputs.output-directory || 'output_evidence' }}
+          results/valint.sarif.json
+        retention-days: 1
 
-    # - name: Upload SARIF file
-    #   uses: github/codeql-action/upload-sarif@v3
-    #   with:
-    #     sarif_file: valint.sarif.json
-    #     category: scout
-
-
+    - name: Upload SARIF file to GitHub Security Alerts
+      if: ${{ inputs.push-github-results == 'true' }}
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: results/valint.sarif.json
+        category: scout
 
     
