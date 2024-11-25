@@ -44,7 +44,6 @@ runs:
     - shell: bash
       name: Install Policy Plugin
       run: |
-        set -x
         if ! command -v docker > /dev/null; then
           echo "Docker is not installed or not available in PATH."
           exit 1
@@ -88,6 +87,8 @@ runs:
           ${{ inputs.args }}
 
     # --bundle-branch SH-6730-docker-plugin \
+
+    # 2DO - Hack should be under verify --payload flag.
     - shell: bash
       name: Extract SARIF file
       if: ${{ steps.run_docker_policy.outputs.success == 'true' }}
