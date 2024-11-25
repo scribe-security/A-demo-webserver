@@ -60,9 +60,9 @@ jobs:
           push: false
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
            
-      - name: Install Scribe Docker Plugin
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
+      # - name: Install Scribe Docker Plugin
+      #   run: |
+      #     curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
 
       # - uses: aquasecurity/trivy-action@0.28.0
       #   name: Run Trivy
