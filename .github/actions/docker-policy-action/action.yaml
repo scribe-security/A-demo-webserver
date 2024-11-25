@@ -37,9 +37,26 @@ runs:
   steps:
     - shell: bash
       name: Install Policy Plugin
-      run: |2-
-        if ! command -v docker > /dev/null || ! docker policy --help > /dev/null 2>&1; then
-           curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
+      run: |
+        # Ensure ~/.docker/cli-plugins/ exists in the PATH
+        export PATH=$PATH:~/.docker/cli-plugins/
+
+        # Check if `docker` is installed and plugin is available
+        if ! command -v docker > /dev/null; then
+          echo "Docker is not installed or not available in PATH."
+          exit 1
+        fi
+
+        # Attempt to use docker policy; ignore errors for this check
+        if ! docker policy --help > /dev/null 2>&1; then
+          echo "Docker policy plugin not found, installing..."
+          curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
+        fi
+
+        # Verify plugin installation
+        if ! docker policy --help > /dev/null 2>&1; then
+          echo "Docker still does not recognize the policy plugin after installation."
+          exit 1
         fi
 
     - shell: bash
