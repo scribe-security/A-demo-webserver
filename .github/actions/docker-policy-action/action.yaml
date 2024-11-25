@@ -35,6 +35,9 @@ inputs:
   output-file:
     description: Output file for the policy plugin
     required: false
+  push-artifacts-evidence:
+    description: Enable artifacts
+    required: false
 runs:
   using: "composite"
   steps:
@@ -96,7 +99,7 @@ runs:
         cat results/valint.sarif.json
 
     - name: Upload evidence
-      if: ${{ inputs.push-github-results == 'true' }}
+      if: ${{ inputs.push-artifacts-evidence == 'true' }}
       uses: actions/upload-artifact@v3
       with:
         name: evidence
