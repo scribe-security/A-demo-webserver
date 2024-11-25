@@ -39,7 +39,7 @@ runs:
       name: Install Policy Plugin
       run: |
         # Ensure ~/.docker/cli-plugins/ exists in the PATH
-        export PATH=$PATH:~/.docker/cli-plugins/
+        # export PATH=$PATH:~/.docker/cli-plugins/
 
         # Check if `docker` is installed and plugin is available
         if ! command -v docker > /dev/null; then
@@ -59,16 +59,16 @@ runs:
           exit 1
         fi
 
-    - shell: bash
-      name: Run Scribe Docker Policy
-      run: |2-
-        // Run `docker policy` command
-        echo "docker policy ${{ inputs.target }} \
-          --select ${{ inputs.select }} \
-          -o attest \
-          --product-version ${{ env.PRODUCT_VERSION }} \
-          --output-directory output_evidence \
-          --output-file scout.sarif.json.sig \
-          --bundle-branch SH-6730-docker-plugin"
+    # - shell: bash
+    #   name: Run Scribe Docker Policy
+    #   run: |2-
+    #     // Run `docker policy` command
+    #     echo "docker policy ${{ inputs.target }} \
+    #       --select ${{ inputs.select }} \
+    #       -o attest \
+    #       --product-version ${{ env.PRODUCT_VERSION }} \
+    #       --output-directory output_evidence \
+    #       --output-file scout.sarif.json.sig \
+    #       --bundle-branch SH-6730-docker-plugin"
 
     
