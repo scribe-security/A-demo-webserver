@@ -88,7 +88,7 @@ runs:
       if: ${{ steps.run_docker_policy.outputs.success == 'true' }}
       run: |
         mkdir -p results
-        echo "STEP OUTPUT" ${{ steps.run_valint.outputs.OUTPUT_PATH }}"
+        echo "STEP OUTPUT" ${{ steps.run_docker_policy.outputs.OUTPUT_PATH }}"
         cat ${{ inputs.output-file || 'scout.sarif.json.sig' }} | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' | jq '.content' > results/valint.sarif.json
         ls -lh results
         cat results/valint.sarif.json
