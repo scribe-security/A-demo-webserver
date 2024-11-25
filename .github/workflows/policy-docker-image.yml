@@ -60,7 +60,12 @@ jobs:
         with:
           target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
           select: scout
-          # input: trivy:trivy-report.sarif.json
+          product-key: demo-server
+          product-version: ${{env.GITHUB_RUN_NUM}}
+          args: |
+            --bundle-branch SH-6730-docker-plugin
+          
+            # input: trivy:trivy-report.sarif.json
   
       # - name: Install Scribe Docker Plugin
       #   run: |
