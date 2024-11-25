@@ -5,6 +5,12 @@ inputs:
   target:
     description: Target object name format=[<image:tag>, <dir path>, <git url>]
     required: true
+  select:
+    description: Select the policy to enforce [scout]
+    required: true
+  input:
+    description: Input evidence to verify against policy
+    required: false
 runs:
   using: "composite"
   steps:
@@ -15,5 +21,17 @@ runs:
         if ! command -v docker > /dev/null || ! docker policy --help > /dev/null 2>&1; then
            curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
         fi
+
+    - shell: bash
+      name: Run Scribe Docker Policy
+      run: |2-
+        // Run `docker policy` command
+        echo "docker policy ${{ inputs.target }} \
+          --select ${{ inputs.select }} \
+          -o attest \
+          --product-version ${{ env.PRODUCT_VERSION }} \
+          --output-directory output_evidence \
+          --output-file scout.sarif.json.sig \
+          --bundle-branch SH-6730-docker-plugin"
 
     

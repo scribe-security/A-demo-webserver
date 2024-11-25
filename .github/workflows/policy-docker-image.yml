@@ -82,8 +82,9 @@ jobs:
 
       - name: Extract Sarif file
         run: |
-          cat  scout.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' >  scout.sarif.json
+          cat  scout.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' | jq '.content' >  scout.sarif.json
           ls -lh
+          cat scout.sarif.json
 
 
       - name: Upload evidence
