@@ -89,8 +89,8 @@ jobs:
             scout.sarif.json
           retention-days: 1
 
-      # - name: Upload SARIF file
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: scout.sarif.json
-      #     category: scout
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: scout.sarif.json
+          category: scout
