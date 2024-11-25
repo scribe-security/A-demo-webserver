@@ -47,20 +47,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Action Policy
+        uses: ./.github/actions/docker-policy-action
+        with:
+          target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+          select: scout
+          # input: trivy:trivy-report.sarif.json
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           push: false
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
            
-
-      - name: Action Policy
-        uses: ./github/actions/docker-policy-action
-        with:
-          target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-          select: scout
-          # input: trivy:trivy-report.sarif.json
-
       - name: Install Scribe Docker Plugin
         run: |
           curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
