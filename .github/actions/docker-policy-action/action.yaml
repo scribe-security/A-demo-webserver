@@ -48,15 +48,17 @@ runs:
         fi
 
         docker --help
-
+        docker policy -h
         # Attempt to use docker policy; ignore errors for this check
         if ! docker policy -h > /dev/null 2>&1; then
           echo "Docker policy plugin not found, installing..."
           curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
+        else
+          echo "Docker policy plugin already installed."
         fi
 
         # Verify plugin installation
-        if ! docker policy --help > /dev/null 2>&1; then
+        if ! docker policy -h > /dev/null 2>&1; then
           echo "Docker still does not recognize the policy plugin after installation."
           exit 1
         fi
