@@ -55,7 +55,28 @@ jobs:
         
           
 
-      - name: Action Policy
+          # input: trivy:trivy-report.sarif.json
+  
+      # - name: Install Scribe Docker Plugin
+      #   run: |
+      #     curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
+
+      - uses: aquasecurity/trivy-action@0.28.0
+        name: Run Trivy
+        with:
+          image-ref: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+          format: 'sarif'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          output: 'trivy-report.sarif.json'
+          # severity: 'CRITICAL,HIGH'
+
+      - run: |
+          ls -lh
+          
+
+      - name: Evaluate Scout Policy
         uses: ./.github/actions/docker-policy-action
         with:
           target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
@@ -67,23 +88,7 @@ jobs:
           push-github-results: true
           args: |
             --bundle-branch SH-6730-docker-plugin
-          
-          # input: trivy:trivy-report.sarif.json
-  
-      # - name: Install Scribe Docker Plugin
-      #   run: |
-      #     curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
 
-      # - uses: aquasecurity/trivy-action@0.28.0
-      #   name: Run Trivy
-      #   with:
-      #     image-ref: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-      #     format: 'sarif'
-      #     exit-code: '0'
-      #     ignore-unfixed: true
-      #     vuln-type: 'os,library'
-      #     output: 'trivy-report.sarif.json'
-      #     # severity: 'CRITICAL,HIGH'
 
       # - name: Run Scribe Docker Plugin
       #   run: |
