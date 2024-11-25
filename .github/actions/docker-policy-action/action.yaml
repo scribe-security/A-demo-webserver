@@ -17,7 +17,6 @@ runs:
     - shell: bash
       name: Install valint
       run: |2-
-        // Check if `docker policy` is not installed [FIX]
         if ! command -v docker > /dev/null || ! docker policy --help > /dev/null 2>&1; then
            curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-6730-docker-plugin/docker-cli-plugin/install.sh | sh -s -- -b SH-6730-docker-plugin -d -x
         fi
