@@ -73,6 +73,7 @@ jobs:
 
   policy-docker-image:
     runs-on: ubuntu-latest
+    needs: semgrep_scan
     permissions:
       contents: read
       # only required for workflows in private repositories
