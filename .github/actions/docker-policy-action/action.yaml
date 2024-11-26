@@ -91,13 +91,12 @@ runs:
     # 2DO - Hack should be under verify --payload flag.
     - shell: bash
       name: Extract SARIF file
-      if: ${{ steps.run_docker_policy.outputs.success == 'true' }}
       run: |
-        mkdir -p results
+        # mkdir -p results
         echo "STEP OUTPUT" ${{ steps.run_docker_policy.outputs.OUTPUT_PATH }}"
-        cat ${{ inputs.output-file || 'scout.sarif.json.sig' }} | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' | jq '.content' > results/valint.sarif.json
-        ls -lh results
-        cat results/valint.sarif.json
+        # cat ${{ inputs.output-file || 'scout.sarif.json.sig' }} | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' | jq '.content' > results/valint.sarif.json
+        ls -lh
+        # valint.sarif.json
 
     - name: Upload evidence
       if: ${{ inputs.push-artifacts-evidence == 'true' }}
@@ -106,14 +105,14 @@ runs:
         name: evidence
         path: |
           ${{ inputs.output-directory || 'output_evidence' }}
-          results/valint.sarif.json
+          valint.sarif.json
         retention-days: 1
 
     - name: Upload SARIF file to GitHub Security Alerts
       if: ${{ inputs.push-github-results == 'true' }}
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: results/valint.sarif.json
+        sarif_file: valint.sarif.json
         category: scout
 
     
