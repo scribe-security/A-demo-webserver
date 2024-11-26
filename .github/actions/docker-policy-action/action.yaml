@@ -35,7 +35,7 @@ inputs:
   output-report:
     description: Output SARIF report for the policy plugin
     required: false
-    default: valint.sarif.json
+    default: valint.intoto.sarif.json
   push-artifacts-evidence:
     description: Enable artifacts
     required: false
@@ -84,7 +84,7 @@ runs:
           ${{ inputs.product-key && '--product-key=' }}${{ inputs.product-key}} \
           ${{ inputs.product-version && '--product-version=' }}${{ inputs.product-version}} \
           ${{ inputs.output-directory && '--output-directory=' }}${{ inputs.output-directory}} \
-          ${{ inputs.output-report && '--payload=' }}${{ inputs.output-report}} \
+          ${{ inputs.output-report && '--output-file=' }}${{ inputs.output-report}} \
           ${{ inputs.input && '--input=' }}${{ inputs.input}} \
           ${{ inputs.args }}
 
@@ -109,14 +109,18 @@ runs:
         name: evidence
         path: |
           ${{ inputs.output-directory }}
-          valint.sarif.json
+          ${{ env.DEFAULT_EXTRACT_NAME }}
         retention-days: 1
+      env:
+        DEFAULT_EXTRACT_NAME: valint.sarif.json
 
     - name: Upload SARIF file to GitHub Security Alerts
       if: ${{ inputs.push-github-results == 'true' }}
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: valint.sarif.json
+        sarif_file: ${{ env.DEFAULT_EXTRACT_NAME }}
         category: scout
+      env:
+        DEFAULT_EXTRACT_NAME: valint.sarif.json
 
     
