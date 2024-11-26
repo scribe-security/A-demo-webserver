@@ -134,7 +134,7 @@ jobs:
           args: |
             --bundle-branch SH-6730-docker-plugin
           input: |-
-            "trivy:testdata/mock.result.sarif,
+            "trivy:testdata/mock.result.sarif,\
             semgrep:semgrep-results.sarif"
 
       - name: INFO
