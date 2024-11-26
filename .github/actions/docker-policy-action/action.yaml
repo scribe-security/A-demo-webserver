@@ -62,6 +62,12 @@ runs:
         fi
 
     - shell: bash
+      name: Info
+      run: |
+        docker images
+
+
+    - shell: bash
       name: Run Scribe Docker Policy
       id: run_docker_policy
       if: ${{ inputs.target }}
