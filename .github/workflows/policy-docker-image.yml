@@ -100,8 +100,6 @@ jobs:
           push: false
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
           load: true
-
-          # input: trivy:trivy-report.sarif.json
   
       # - uses: aquasecurity/trivy-action@0.28.0
       #   name: Run Trivy
@@ -115,14 +113,13 @@ jobs:
       #     # severity: 'CRITICAL,HIGH'
 
 
-      - name: Download Semgrep results
-        uses: actions/download-artifact@v3
-        with:
-          name: semgrep-scan-results
+      # - name: Download Semgrep results
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: semgrep-scan-results
 
-      - run: |
-          ls -lh
-          ls -lh testdata || true
+      - name: Docker Info
+        run: |
           docker images
 
       - name: Evaluate Scout Policy
@@ -144,32 +141,15 @@ jobs:
         run: |
           ls -lh
 
-      # - name: Run Scribe Docker Plugin
-      #   run: |
-      #     docker policy ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}} \
-      #      --select scout \
-      #      -o attest \
-      #      --product-version ${{ env.PRODUCT_VERSION }} \
-      #      --output-directory output_evidence \
-      #      --output-file valint.sarif.json.sig \
-      #      --bundle-branch SH-6730-docker-plugin
 
       # #           --input-evidence trivy:trivy-report.sarif.json \
-
-      # - name: Extract Sarif file
-      #   run: |
-      #     mkdir results
-      #     cat  valint.sarif.json.sig | jq -r '.payload' | base64 -d | jq -r '.payload' | base64 --decode | jq '.predicate' | jq '.content' >  results/valint.sarif.json
-      #     ls -lh
-      #     cat results/valint.sarif.json
-
 
       # - name: Upload evidence
       #   uses: actions/upload-artifact@v4
       #   with:
       #     name: evidence
       #     path: |
-      #       output_evidence
+      #       evidence
       #       valint.sarif.json
       #     retention-days: 1
 
