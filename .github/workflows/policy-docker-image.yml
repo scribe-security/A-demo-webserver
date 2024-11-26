@@ -127,6 +127,7 @@ jobs:
       - run: |
           ls -lh
           ls -lh testdata || true
+          docker images
 
       - name: Evaluate Scout Policy
         uses: ./.github/actions/docker-policy-action
