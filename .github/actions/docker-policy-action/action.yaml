@@ -32,9 +32,10 @@ inputs:
   product-version:
     description: Evidence Product version
     required: false
-  output-file:
-    description: Output file for the policy plugin
+  output-report:
+    description: Output SARIF report for the policy plugin
     required: false
+    default: valint.sarif.json
   push-artifacts-evidence:
     description: Enable artifacts
     required: false
@@ -83,7 +84,7 @@ runs:
           ${{ inputs.product-key && '--product-key=' }}${{ inputs.product-key}} \
           ${{ inputs.product-version && '--product-version=' }}${{ inputs.product-version}} \
           ${{ inputs.output-directory && '--output-directory=' }}${{ inputs.output-directory}} \
-          ${{ inputs.output-file && '--output-file=' }}${{ inputs.output-file}} \
+          ${{ inputs.output-report && '--payload=' }}${{ inputs.output-report}} \
           ${{ inputs.input && '--input=' }}${{ inputs.input}} \
           ${{ inputs.args }}
 
