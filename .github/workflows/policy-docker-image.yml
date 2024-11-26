@@ -100,7 +100,7 @@ jobs:
         with:
           push: false
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-
+          load: true
           # input: trivy:trivy-report.sarif.json
   
       # - name: Install Scribe Docker Plugin
