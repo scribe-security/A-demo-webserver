@@ -113,10 +113,10 @@ jobs:
       #     # severity: 'CRITICAL,HIGH'
 
 
-      - name: Download Semgrep results
-        uses: actions/download-artifact@v4
-        with:
-          name: semgrep-scan-results
+      # - name: Download Semgrep results
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: semgrep-scan-results
 
       - name: Docker Info
         run: |
@@ -133,7 +133,7 @@ jobs:
           format: attest
           args: |
             --bundle-branch SH-6730-docker-plugin
-          input: |-
+          input:
             "trivy:testdata/mock.result.sarif,\
             semgrep:semgrep-results.sarif"
 
