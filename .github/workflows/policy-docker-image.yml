@@ -47,7 +47,7 @@ jobs:
     steps:
       # Fetch project source with GitHub Actions Checkout.
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Perform Semgrep Analysis
       # @NOTE: This is the actual semgrep command to scan your code.
@@ -58,7 +58,7 @@ jobs:
 
       # upload the results for the CodeQL GitHub app to annotate the code
       - name: Save SARIF results as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: semgrep-scan-results
           path: semgrep-results.sarif
@@ -83,7 +83,7 @@ jobs:
     if: (github.actor != 'dependabot[bot]')
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
   
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -164,7 +164,7 @@ jobs:
 
 
       # - name: Upload evidence
-      #   uses: actions/upload-artifact@v3
+      #   uses: actions/upload-artifact@v4
       #   with:
       #     name: evidence
       #     path: |
