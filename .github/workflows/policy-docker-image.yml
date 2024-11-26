@@ -118,10 +118,6 @@ jobs:
       #   with:
       #     name: semgrep-scan-results
 
-      - name: Docker Info
-        run: |
-          docker images
-
       - name: Evaluate Scout Policy
         uses: ./.github/actions/docker-policy-action
         with:
