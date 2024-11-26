@@ -75,13 +75,14 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      # only required for workflows in private repositories
+      actions: read
       security-events: write
       id-token: write
+    if: (github.actor != 'dependabot[bot]')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
   
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -91,14 +92,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           push: false
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-        
-          
 
           # input: trivy:trivy-report.sarif.json
   
@@ -117,10 +117,15 @@ jobs:
       #     output: 'trivy-report.sarif.json'
       #     # severity: 'CRITICAL,HIGH'
 
-      - run: |
-          ls-lh
-          ls -lh testdata || true
 
+      - name: Download Semgrep results
+        uses: actions/download-artifact@v3
+        with:
+          name: semgrep-scan-results
+
+      - run: |
+          ls -lh
+          ls -lh testdata || true
 
       - name: Evaluate Scout Policy
         uses: ./.github/actions/docker-policy-action
