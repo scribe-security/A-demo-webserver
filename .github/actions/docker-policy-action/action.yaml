@@ -61,17 +61,6 @@ runs:
           echo "Docker policy plugin already installed."
         fi
 
-        POLICY_HELP=$(docker policy -h | grep "valint" || true)
-        echo "$POLICY_HELP"
-
-        # Verify plugin installation
-        if [ -z "$POLICY_HELP" ]; then
-          echo "Docker still does not recognize the policy plugin after installation."
-          exit 1
-        else
-          echo "Docker policy plugin installed successfully."
-        fi
-
     - shell: bash
       name: Run Scribe Docker Policy
       id: run_docker_policy
