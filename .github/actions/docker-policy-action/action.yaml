@@ -29,6 +29,7 @@ inputs:
   output-directory:
     description: Output directory for the policy plugin
     required: false
+    default: evidence
   product-key:
     description: Evidence Product key
     required: false
