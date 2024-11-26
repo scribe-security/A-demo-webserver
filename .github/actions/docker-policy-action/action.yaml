@@ -17,6 +17,9 @@ inputs:
   push-github-results:
     description: Push Results to github Security alerts
     required: false
+  push-artifacts-evidence:
+    description: Enable artifacts
+    required: false
   verify-only:
     description: Verify remote evidence against policy
     required: false
@@ -36,9 +39,7 @@ inputs:
     description: Output SARIF report for the policy plugin
     required: false
     default: valint.intoto.sarif.json
-  push-artifacts-evidence:
-    description: Enable artifacts
-    required: false
+
 
 runs:
   using: "composite"
@@ -97,25 +98,25 @@ runs:
       env:
         DEFAULT_EXTRACT_NAME: valint.sarif.json
 
-    - name: Upload evidence
-      if: ${{ inputs.push-artifacts-evidence == 'true' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: evidence
-        path: |
-          ${{ inputs.output-directory }}
-          ${{ env.DEFAULT_EXTRACT_NAME }}
-        retention-days: 1
-      env:
-        DEFAULT_EXTRACT_NAME: valint.sarif.json
+    # - name: Upload evidence
+    #   if: ${{ inputs.push-artifacts-evidence == 'true' }}
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: evidence
+    #     path: |
+    #       ${{ inputs.output-directory }}
+    #       ${{ env.DEFAULT_EXTRACT_NAME }}
+    #     retention-days: 1
+    #   env:
+    #     DEFAULT_EXTRACT_NAME: valint.sarif.json
 
-    - name: Upload SARIF file to GitHub Security Alerts
-      if: ${{ inputs.push-github-results == 'true' }}
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: ${{ env.DEFAULT_EXTRACT_NAME }}
-        category: scout
-      env:
-        DEFAULT_EXTRACT_NAME: valint.sarif.json
+    # - name: Upload SARIF file to GitHub Security Alerts
+    #   if: ${{ inputs.push-github-results == 'true' }}
+    #   uses: github/codeql-action/upload-sarif@v3
+    #   with:
+    #     sarif_file: ${{ env.DEFAULT_EXTRACT_NAME }}
+    #     category: scout
+    #   env:
+    #     DEFAULT_EXTRACT_NAME: valint.sarif.json
 
     
