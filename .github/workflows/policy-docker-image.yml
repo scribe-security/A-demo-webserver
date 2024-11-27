@@ -118,36 +118,37 @@ jobs:
         with:
           name: semgrep-scan-results
 
-      - name: Evaluate Scout Policy
-        uses: ./.github/actions/docker-policy-action
-        with:
-          target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-          select: scout
-          product-key: demo-server
-          product-version: ${{env.GITHUB_RUN_NUM}}
-          output-report: valint.sarif.json
-          format: attest
-          args: |
-            --bundle-branch SH-6730-docker-plugin
-          # input:
-          #   "trivy:testdata/mock.result.sarif,\
-          #   semgrep:semgrep-results.sarif"
-
-      - name: INFO
-        run: |
-          ls -lh
-
-      - name: Upload evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: evidence
-          path: |
-            evidence
-            valint.sarif.json
-          retention-days: 1
-
-      # - name: Upload SARIF file
-      #   uses: github/codeql-action/upload-sarif@v3
+      # - name: Evaluate Scout Policy
+      #   uses: ./.github/actions/docker-policy-action
       #   with:
-      #     sarif_file: valint.sarif.json
-      #     category: scout
+      #     target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+      #     select: scout
+      #     product-key: demo-server
+      #     product-version: ${{env.GITHUB_RUN_NUM}}
+      #     output-report: valint.sarif.json
+      #     format: attest
+      #     args: |
+      #       --bundle-branch SH-6730-docker-plugin
+      #     # input:
+      #     #   "trivy:testdata/mock.result.sarif,\
+      #     #   semgrep:semgrep-results.sarif"
+
+      # - name: INFO
+      #   run: |
+      #     ls -lh
+
+      # - name: Upload evidence
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: evidence
+      #     path: |
+      #       evidence
+      #       valint.sarif.json
+      #     retention-days: 1
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          # sarif_file: valint.sarif.json
+          sarif_file: testdata/real.sarif.json
+          category: scout
