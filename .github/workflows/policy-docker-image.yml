@@ -152,4 +152,6 @@ jobs:
           # sarif_file: valint.sarif.json
           sarif_file: testdata/valint.sarif.json
           # sarif_file: testdata/real.sarif.json
-          category: scout
+          # category: scout
+
+          
