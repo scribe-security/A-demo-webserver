@@ -150,5 +150,6 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           # sarif_file: valint.sarif.json
-          sarif_file: testdata/real.sarif.json
+          sarif_file: testdata/valint.sarif.json
+          # sarif_file: testdata/real.sarif.json
           category: scout
