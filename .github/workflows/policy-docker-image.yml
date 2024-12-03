@@ -72,7 +72,7 @@ jobs:
         if: always()
         
   
-  policy-docker-image:
+  image-policy-check:
     runs-on: ubuntu-latest
     needs: semgrep_scan
     permissions:
@@ -102,16 +102,16 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
           load: true
   
-      # - uses: aquasecurity/trivy-action@0.28.0
-      #   name: Run Trivy
-      #   with:
-      #     image-ref: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-      #     format: 'sarif'
-      #     exit-code: '0'
-      #     ignore-unfixed: true
-      #     vuln-type: 'os,library'
-      #     output: 'trivy-report.sarif.json'
-      #     # severity: 'CRITICAL,HIGH'
+      - uses: aquasecurity/trivy-action@0.28.0
+        name: Run Trivy
+        with:
+          image-ref: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+          format: 'sarif'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          output: 'trivy-report.sarif.json'
+          # severity: 'CRITICAL,HIGH'
 
 
       - name: Download Semgrep results
@@ -147,12 +147,10 @@ jobs:
       #       valint.sarif.json
       #     retention-days: 1
 
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          # sarif_file: valint.sarif.json
-          sarif_file: testdata/valint.sarif.json
-          ref: refs/heads/main
-          # sarif_file: testdata/real.sarif.json
-          # category: scout
+      # - name: Upload SARIF file
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: valint.sarif.json
+      #     ref: refs/heads/main
+      #     category: scout
 
