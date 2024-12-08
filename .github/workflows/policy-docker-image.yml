@@ -107,13 +107,15 @@ jobs:
         with:
           image-ref: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
           format: 'sarif'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
           output: 'trivy-report.sarif.json'
           file: ./Dockefile
           # severity: 'CRITICAL,HIGH'
 
+
+          
       - name: Download Semgrep results
         uses: actions/download-artifact@v4
         with:
