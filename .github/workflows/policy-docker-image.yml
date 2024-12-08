@@ -127,8 +127,8 @@ jobs:
           target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
           select: scout
           file: ./Dockerfile
-          input:
-            "trivy:testdata/mock.result.sarif,\
+          input: #sarif:testdata/mock.result.sarif
+            "sarif:trivy-report.sarif.json,\
             semgrep:semgrep-results.sarif"
           product-key: scout_${{env.IMAGE_NAME}}
           product-version: 1.1.${{env.GITHUB_RUN_NUM}}
@@ -137,7 +137,6 @@ jobs:
           args: |
             --bundle-branch SH-6730-docker-plugin
 
-            
       # - name: INFO
       #   run: |
       #     ls -lh
