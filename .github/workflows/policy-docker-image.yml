@@ -69,7 +69,6 @@ jobs:
       #   with:
       #     sarif_file: semgrep-results.sarif
       #   if: always()
-        
   
   image-policy-check:
     runs-on: ubuntu-latest
@@ -117,6 +116,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: semgrep-scan-results
+
+      - name: INFO
+        run: |
+          ls -lh
 
       - name: Evaluate Scout Policy
         uses: ./.github/actions/docker-policy-action
