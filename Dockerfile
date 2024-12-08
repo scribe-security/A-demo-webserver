@@ -17,6 +17,9 @@ COPY . .
 # Expose the port on which the app will run
 EXPOSE 3000
 
+RUN echo "tttttttttttttttttttttt" > ./test.txt
+RUN touch ./test2.txt
+RUN echo "Aaaaaaaaaaaaaaaaaaaa"
 
 # Define the command to run the application
 CMD ["node", "star-server.js"]
