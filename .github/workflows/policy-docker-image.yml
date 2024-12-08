@@ -126,16 +126,16 @@ jobs:
         with:
           target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
           select: scout
+          file: ./Dockerfile
+          input:
+            "trivy:testdata/mock.result.sarif,\
+            semgrep:semgrep-results.sarif"
           product-key: scout_${{env.IMAGE_NAME}}
           product-version: 1.1.${{env.GITHUB_RUN_NUM}}
           output-report: valint.sarif.json
           format: attest
           args: |
             --bundle-branch SH-6730-docker-plugin
-          file: ./Dockerfile
-          input:
-            "trivy:testdata/mock.result.sarif,\
-            semgrep:semgrep-results.sarif"
 
             
       # - name: INFO
@@ -157,4 +157,5 @@ jobs:
       #     sarif_file: valint.sarif.json
       #     ref: refs/heads/main
       #     category: scout
+
 
