@@ -123,7 +123,7 @@ jobs:
         with:
           target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
           select: scout
-          product-key: ${{env.IMAGE_NAME}}
+          product-key: scout_${{env.IMAGE_NAME}}
           product-version: 1.1.${{env.GITHUB_RUN_NUM}}
           output-report: valint.sarif.json
           format: attest

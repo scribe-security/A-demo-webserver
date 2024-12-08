@@ -81,12 +81,12 @@ runs:
         docker policy ${{ inputs.target }} \
           --select ${{ inputs.select }} \
           ${{ inputs.format && '--format=' }}${{ inputs.format }} \
+          ${{ inputs.file && '--file=' }}${{ inputs.file}} \
           ${{ inputs.product-key && '--product-key=' }}${{ inputs.product-key}} \
           ${{ inputs.product-version && '--product-version=' }}${{ inputs.product-version}} \
           ${{ inputs.output-directory && '--output-directory=' }}${{ inputs.output-directory}} \
           ${{ inputs.output-report && '--output-file=' }}${{ inputs.output-report}} \
           ${{ inputs.input && '--input=' }}${{ inputs.input}} \
-          ${{ inputs.file && '--file=' }}${{ inputs.file}} \
           ${{ inputs.args }}
 
     # --bundle-branch SH-6730-docker-plugin \
