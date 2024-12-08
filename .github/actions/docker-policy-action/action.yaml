@@ -40,6 +40,9 @@ inputs:
     description: Output SARIF report for the policy plugin
     required: false
     default: valint.intoto.sarif.json
+  file:
+    description: "Path to the Dockerfile"
+    required: false
 
 
 runs:
@@ -83,6 +86,7 @@ runs:
           ${{ inputs.output-directory && '--output-directory=' }}${{ inputs.output-directory}} \
           ${{ inputs.output-report && '--output-file=' }}${{ inputs.output-report}} \
           ${{ inputs.input && '--input=' }}${{ inputs.input}} \
+          ${{ inputs.file && '--file=' }}${{ inputs.file}} \
           ${{ inputs.args }}
 
     # --bundle-branch SH-6730-docker-plugin \

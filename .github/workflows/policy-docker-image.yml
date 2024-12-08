@@ -103,6 +103,9 @@ jobs:
   
       - uses: aquasecurity/trivy-action@0.28.0
         name: Run Trivy
+        env:
+          CONTINUE_ON_ERROR: ${{ inputs.continue-on-error }}
+        continue-on-error: ${{ fromJSON(env.CONTINUE_ON_ERROR) }}
         with:
           image-ref: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
           format: 'sarif'
@@ -110,6 +113,7 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           output: 'trivy-report.sarif.json'
+          file: ./Dockefile
           # severity: 'CRITICAL,HIGH'
 
       - name: Download Semgrep results
