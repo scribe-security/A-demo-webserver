@@ -112,7 +112,6 @@ jobs:
           output: 'trivy-report.sarif.json'
           # severity: 'CRITICAL,HIGH'
 
-
       - name: Download Semgrep results
         uses: actions/download-artifact@v4
         with:
