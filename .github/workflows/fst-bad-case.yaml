@@ -67,7 +67,7 @@ jobs:
         id: clone-repo
         env:
           STEP_NAME: Clone repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Modify Dockerfile
         run: |
@@ -113,7 +113,7 @@ jobs:
       #   id: archive-build-artifacts
       #   env:
       #     STEP_NAME: Archive build artifacts
-      #   uses: actions/upload-artifact@v3
+      #   uses: actions/upload-artifact@v4
       #   with:
       #     name: build-artifacts
       #     path: |
@@ -182,7 +182,7 @@ jobs:
         id: archive-fs-tracker-logs
         env:
           STEP_NAME: Archive fs-tracker logs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: fs-tracker-logs
           path: |
