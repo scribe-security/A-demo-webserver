@@ -48,7 +48,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: scribesecuriy.jfrog.io/scribe-docker-public-local/sky-mapper:latest
+          tags: scribesecurity/sky-mapper:latest
 
       - name: Attest Docker Image
         uses: scribe-security/action-bom@master
