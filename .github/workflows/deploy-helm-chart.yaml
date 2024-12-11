@@ -34,7 +34,7 @@ jobs:
         run: |
           aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER }} --region ${{ secrets.AWS_REGION }}
 
-      - uses: marcofranssen/setup-kubectl@v0.3.0
+      - uses: marcofranssen/setup-kubectl@v1.2.1
         with:
           enablePlugins: true
           plugins: aws-auth,grep
