@@ -42,6 +42,7 @@ jobs:
       #     registry: https://scribesecuriy.jfrog.io
       #     username: ${{ env.JFROG_USER }}
       #     password: ${{ secrets.JFROG_PASS }}
+      
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
