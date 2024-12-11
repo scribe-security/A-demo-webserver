@@ -48,12 +48,12 @@ jobs:
         with:
           context: .
           push: true
-          tags: scribesecurity/sky-mapper:latest
+          tags: scribesecuriy.jfrog.io/scribe-docker-public-local/sky-mapper:latest
 
       - name: Attest Docker Image
         uses: scribe-security/action-bom@master
         with:
-           target: scribesecurity/sky-mapper:latest
+           target: scribesecuriy.jfrog.io/scribe-docker-public-local/sky-mapper:latest
            scribe-enable: true
            product-key:  ${{ env.SCRIBE_PRODUCT_NAME }}
            product-version: ${{env.SCRIBE_PRODUCT_VERSION}}   
