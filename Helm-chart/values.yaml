@@ -58,7 +58,7 @@ ingress:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:il-central-1:975050347682:certificate/f1400258-a940-46a4-84b2-48885f57fb22
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:il-central-1:975050347682:certificate/aec1d7d9-b3ba-46a3-b026-5abbf1ceb6b8
     alb.ingress.kubernetes.io/success-codes: 200,404,204
     alb.ingress.kubernetes.io/manage-backend-security-group-rules: 'true'
     alb.ingress.kubernetes.io/security-groups: sg-0e7244a820c5e03ce
