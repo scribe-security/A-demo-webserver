@@ -22,19 +22,19 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.OIDC_GITHUB_ROLE }}
+          role-to-assume: ${{ secrets.OIDC_ROLE }}
           role-session-name: Github
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION_IL }}
 
       - name: Run AWS CLI commands
         shell: bash
         env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          EKS_CLUSTER: ${{ secrets.EKS_CLUSTER }}  
+          AWS_REGION: ${{ secrets.AWS_REGION_IL }}
+          EKS_CLUSTER: ${{ secrets.EKS_CLUSTER_IL }}  
         run: |
-          aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER }} --region ${{ secrets.AWS_REGION }}
+          aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }}
 
-      - uses: marcofranssen/setup-kubectl@v0.3.0
+      - uses: marcofranssen/setup-kubectl@v1.2.1
         with:
           enablePlugins: true
           plugins: aws-auth,grep

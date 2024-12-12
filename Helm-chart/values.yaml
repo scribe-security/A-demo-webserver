@@ -58,15 +58,15 @@ ingress:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:335681522553:certificate/7b5f3654-a03a-40e4-a14e-d87026886e9f
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:il-central-1:975050347682:certificate/aec1d7d9-b3ba-46a3-b026-5abbf1ceb6b8
     alb.ingress.kubernetes.io/success-codes: 200,404,204
     alb.ingress.kubernetes.io/manage-backend-security-group-rules: 'true'
-    alb.ingress.kubernetes.io/security-groups: sg-0a207e53dbe2e84b6
+    alb.ingress.kubernetes.io/security-groups: sg-0e7244a820c5e03ce
     alb.ingress.kubernetes.io/group.name: demo-test-alb
-    alb.ingress.kubernetes.io/subnets: subnet-06bde5ea53242841c, subnet-01ecd4d964cd3bb45, subnet-0cb95d81f0949cb8b
+    alb.ingress.kubernetes.io/subnets: subnet-038bb4005e69635e3, subnet-0afc4071777f7a567, subnet-04b03d55455a6df42
     alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
   hosts:
-    - host: demo-app.scribesecurity.com
+    - host: demo-app-test.scribesecurity.com
       paths:
         - path: /
           pathType: ImplementationSpecific
