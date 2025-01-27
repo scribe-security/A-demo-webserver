@@ -56,6 +56,8 @@ jobs:
       - run: |
           shopt -s expand_aliases
           alias docker='$HOME/.docker/cli-plugins/docker-policy-hook'
+          echo "List the aliases"
+          alias
           ls -lh $HOME/.docker/cli-plugins/
           # DEBUG=true $HOME/.docker/cli-plugins/docker-policy-hook build . -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
           DEBUG=true docker build . -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
