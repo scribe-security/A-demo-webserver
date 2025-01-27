@@ -19,6 +19,7 @@ runs:
         if [ -z "$POLICY_HELP" ]; then
           echo "Docker policy plugin not found, installing..."
           export DEBUG=true
+          shopt -s expand_aliases
           curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-7283-simplification/docker-cli-plugin/install.sh | sh -s -- -b SH-7283-simplification -A
         else
           echo "Docker policy plugin already installed."
