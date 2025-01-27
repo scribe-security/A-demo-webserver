@@ -57,11 +57,8 @@ jobs:
 
       - shell: bash
         run: |
-          export rc=/tmp/docker-alias
-          echo 'shopt -s expand_aliases' > $rc
-          ls -lh /tmp
-          echo 'alias docker="$HOME/.docker/cli-plugins/docker-policy-hook" ' >> $rc
-          source  $rc
+          source  $DOCKER_ALIAS_FILE
+          echo $DOCKER_ALIAS_FILE
           DEBUG=true docker build . -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
 
       # - run: |

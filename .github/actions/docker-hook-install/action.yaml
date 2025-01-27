@@ -24,3 +24,12 @@ runs:
         else
           echo "Docker policy plugin already installed."
         fi
+
+
+    - shell: bash
+      name: Create Alias File
+      run: |
+        export rc=/tmp/docker-alias
+        echo 'shopt -s expand_aliases' > $rc
+        echo 'alias docker="$HOME/.docker/cli-plugins/docker-policy-hook" ' >> $rc
+        echo "DOCKER_ALIAS_FILE=$rc" >> $GITHUB_ENV
