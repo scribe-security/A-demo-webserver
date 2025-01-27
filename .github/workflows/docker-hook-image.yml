@@ -54,7 +54,7 @@ jobs:
           docker --help
           
       - run: |
-          shopt -s expand_aliases
+          # shopt -s expand_aliases
           alias docker='$HOME/.docker/cli-plugins/docker-policy-hook'
           echo "List the aliases"
           alias
