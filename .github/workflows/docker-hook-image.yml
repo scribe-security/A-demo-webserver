@@ -52,14 +52,14 @@ jobs:
 
       - run: |
           docker --help
-
+          
       - run: |
           alias docker=$HOME/docker/cli-plugins/docker-policy-hook
-
-      - run: |
           ls -la $HOME/.docker/cli-plugins/
           DEBUG=true docker build . -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
           ls -la $HOME/.cache/docker-policy/ || true
+
+      - run: |
           $HOME/docker/cli-plugins/docker-policy-hook  build . -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
 
 
