@@ -1,0 +1,25 @@
+name: Scribe Docker Policy Action
+description: Verify compliance policies against evidence to ensure the integrity of supply chain.
+author: Mikey Strauss
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      name: Install Policy Plugin
+      run: |
+        if ! command -v docker > /dev/null; then
+          echo "Docker is not installed or not available in PATH."
+          exit 1
+        fi
+
+        POLICY_HELP=$(docker policy -h | grep "valint" || true)
+        echo "$POLICY_HELP"
+
+        if [ -z "$POLICY_HELP" ]; then
+          echo "Docker policy plugin not found, installing..."
+          export DEBUG=true
+          curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/SH-7283-simplification/docker-cli-plugin/install.sh | sh -s -- -b SH-7283-simplification -A
+        else
+          echo "Docker policy plugin already installed."
+        fi
