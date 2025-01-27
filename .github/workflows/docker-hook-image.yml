@@ -49,7 +49,15 @@ jobs:
 
       - run: |
           alias
-          docker --help || true
+
+      - run: |
+          docker --help
+
+      - run: |
+          alias docker=$HOME/docker/cli-plugins/docker-policy-hook
+
+      - run: |
+          docker --help
 
       - name: Log in to DockerHub
         uses: docker/login-action@v2
