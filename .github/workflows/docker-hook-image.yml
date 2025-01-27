@@ -57,7 +57,7 @@ jobs:
           alias docker=$HOME/docker/cli-plugins/docker-policy-hook
 
       - run: |
-          ls -la $HOME/docker/cli-plugins/
+          ls -la $HOME/.docker/cli-plugins/
           DEBUG=true docker build . -f Test
 
       - name: Log in to DockerHub
