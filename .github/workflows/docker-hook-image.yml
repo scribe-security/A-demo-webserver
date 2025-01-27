@@ -47,6 +47,10 @@ jobs:
       - name: Install Valint Docker hooks
         uses: ./.github/actions/docker-hook-install
 
+      - run: |
+          alias
+          docker --help || true
+
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
