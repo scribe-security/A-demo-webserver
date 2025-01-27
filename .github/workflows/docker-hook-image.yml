@@ -60,9 +60,9 @@ jobs:
           export rc=/tmp/docker-alias
           echo 'shopt -s expand_aliases' > $rc
           ls -lh /tmp
-          echo 'alias docker="$HOME/.docker/cli-plugins/docker-alias" ' >> $rc
+          echo 'alias docker="$HOME/.docker/cli-plugins/docker-policy-hook" ' >> $rc
           source  $rc
-          #DEBUG=true docker build . -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+          DEBUG=true docker build . -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
 
       # - run: |
       #     ls -la ${HOME}/.bashrc || true
