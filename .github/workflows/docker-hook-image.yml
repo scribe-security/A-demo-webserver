@@ -46,37 +46,17 @@ jobs:
 
       - name: Install Valint Docker hooks
         uses: ./.github/actions/docker-hook-install
+        env:
+          SET_EXE_LINK: true
+
 
       - run: |
-          alias
-
-      - run: |
-          docker --help
-          
-      - run: |
+          which docker
+          ls -lh /usr/local/bin
 
       - shell: bash
         run: |
-          source  $DOCKER_ALIAS_FILE
-          echo $DOCKER_ALIAS_FILE
           DEBUG=true docker build . -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-
-      # - run: |
-      #     ls -la ${HOME}/.bashrc || true
-      #     ls -la ${HOME}/.zshrc || true
-      #     echo $PATH
-
-      - run: |
-          DEBUG=true docker build . -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-
-
-      #     ls -la $HOME/.docker/cli-plugins/
-      #     DEBUG=true docker build . -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-      #     ls -la $HOME/.cache/docker-policy/ || true
-
-      # - run: |
-      #     $HOME/docker/cli-plugins/docker-policy-hook  build . -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-
 
       # - name: Log in to DockerHub
       #   uses: docker/login-action@v2
