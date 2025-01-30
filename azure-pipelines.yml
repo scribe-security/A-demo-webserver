@@ -53,6 +53,7 @@ jobs:
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
+        repository: test_mikey
         containerRegistry: $(containerRegistry)
         dockerfile: $(dockerfilePath)
         tags: |

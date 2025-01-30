@@ -3,8 +3,8 @@ name: docker-hook-check
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
   PRODUCT_VERSION: 1.0.8
-  IMAGE_NAME: star-generator
-  APP_NAME: Sky-Mapper
+  IMAGE_NAME: test_mikey
+  APP_NAME: test_mikey
   VALINT_BOM_AUTHOR_NAME: Guy-Chernobrov
   VALINT_BOM_AUTHOR_EMAIL: gc@scribesecurity.com
   VALINT_BOM_AUTHOR_PHONE: 052-9281309
@@ -49,8 +49,6 @@ jobs:
         env:
           SET_EXE_LINK: true
           AUTO_LABEL: true
-
-
 
       - run: |
           which docker
