@@ -1,0 +1,45 @@
+trigger:
+  branches:
+    include:
+    - master
+    - SH-7283-simplification
+
+# variables:
+# - name: SCRIBE_URL
+#   value: https://api.staging.scribesecurity.com
+# - name:  SCRIBE_LOGIN_URL
+#   value: https://scribe-hub-staging.us.auth0.com
+# - name: SCRIBE_AUDIENCE
+#   value: api.staging.scribesecurity.com
+
+jobs:
+
+######################### PRE RELEASE / STAGING #########################
+  - job: docker-hook-image
+    displayName: docker_hook_image
+    strategy:
+      matrix:
+        linux_agent:
+          poolName: Mikey
+          agentName: azure-runner-ubuntu
+
+        # windows_agent:
+        #   poolName: Mikey
+        #   agentName: azure-runner-windows
+    pool:
+      name:  $(poolName)
+      demands:
+        - Agent.Name -equals  $(agentName)
+  
+    variables:
+      - name: ENV
+        value: dev
+      - name: DEBUG
+        value: "true"
+
+    steps:
+    
+    - script: echo Hello world
+      displayName: Hello
+
+   
