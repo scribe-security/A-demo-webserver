@@ -75,6 +75,11 @@ jobs:
           DEBUG: true
 
 
+      - name: Check evidence
+        run: |
+          ls -lh || true
+          ls -lh ~/.cache/valint || true
+
       - name: Check Id file
         run: |
           cat /tmp/docker-actions-toolkit-*/iidfile
