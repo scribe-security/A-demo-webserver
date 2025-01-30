@@ -4,7 +4,13 @@ trigger:
     - master
     - SH-7283-simplification
 
-# variables:
+variables:
+  # dockerRegistryServiceConnection: '7f9dc28e-5551-43ee-891f-33bf61a995de'
+  # imageRepository: 'usernamepipelinesjavascriptdocker'
+  containerRegistry: 'scribe_dockerhub'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: '$(Build.BuildId)'
+
 # - name: SCRIBE_URL
 #   value: https://api.staging.scribesecurity.com
 # - name:  SCRIBE_LOGIN_URL
@@ -42,4 +48,13 @@ jobs:
     - script: echo Hello world
       displayName: Hello
 
+
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        tags: |
+          $(tag)
    
