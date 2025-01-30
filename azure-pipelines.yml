@@ -49,11 +49,23 @@ jobs:
       displayName: Hello
 
 
+    # /usr/bin/docker build -f /home/azure-runner-ubuntu/myagent/_work/4/s/Dockerfile 
+    #--label com.azure.dev.image.system.teamfoundationcollectionuri=https://dev.azure.com/***/ 
+    #--label com.azure.dev.image.system.teamproject=Scribeproject 
+    #--label com.azure.dev.image.build.repository.name=scribe-security/A-demo-webserver 
+    #--label com.azure.dev.image.build.sourceversion=b9174709042047b589c4cab552e7513fb0bddcb7 
+    #--label com.azure.dev.image.build.repository.uri=https://github.com/scribe-security/A-demo-webserver 
+    #--label com.azure.dev.image.build.sourcebranchname=SH-7283-simplification 
+    #--label com.azure.dev.image.build.definitionname=scribe-security.A-demo-webserver 
+    #--label com.azure.dev.image.build.buildnumber=20250130.7 
+    #--label com.azure.dev.image.build.builduri=vstfs:///Build/Build/1183 
+    #--label image.base.ref.name=node:20.13.1-slim -t test_mikey:1183 /home/azure-runner-ubuntu/myagent/_work/4/s
+
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: test_mikey
+        repository: scribesecurity/test_mikey
         containerRegistry: $(containerRegistry)
         dockerfile: $(dockerfilePath)
         tags: |
