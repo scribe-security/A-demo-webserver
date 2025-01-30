@@ -15,7 +15,7 @@ trigger:
 jobs:
 
 ######################### PRE RELEASE / STAGING #########################
-  - job: docker-hook-image
+  - job: docker_hook_image
     displayName: docker_hook_image
     strategy:
       matrix:
@@ -38,7 +38,7 @@ jobs:
         value: "true"
 
     steps:
-    
+
     - script: echo Hello world
       displayName: Hello
 
