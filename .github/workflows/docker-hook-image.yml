@@ -48,7 +48,7 @@ jobs:
         uses: ./.github/actions/docker-hook-install
         env:
           SET_EXE_LINK: true
-          # AUTO_LABEL: true
+          AUTO_LABEL: true
 
 
 
