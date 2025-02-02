@@ -19,10 +19,11 @@ inputs:
     required: true
   repository:
     description: "Target repository in the format 'owner/repo'"
-    required: false
+    required: true
   event_type:
     description: "Repository Dispatch event type (e.g., 'my-event')"
     default: "my-event"
+    required: true
   # The following inputs are optional. You can define them as needed
   # or simply rely on environment variables within your workflow.
   docker_context_git_branch:
