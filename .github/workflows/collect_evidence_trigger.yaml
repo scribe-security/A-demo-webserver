@@ -54,7 +54,7 @@ jobs:
 
       - run: |
           source .github/context
-          printenv
+          echo "TARGET=${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}" >> .github/context
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v3
@@ -66,7 +66,7 @@ jobs:
             {
               "git_branch": "${{ env.DOCKER_CONTEXT_GIT_BRANCH }}", 
               "git_commit": "${{ env.DOCKER_CONTEXT_GIT_COMMIT }}",
-              "git_url": "${{ env.DOCKER_CONTEXT_GIT_URL }}"
+              "git_url": "${{ env.DOCKER_CONTEXT_GIT_URL }}",
               "git_tag": "${{ env.DOCKER_CONTEXT_GIT_TAG }}",
               "git_ref": "${{ env.DOCKER_CONTEXT_GIT_REF }}",
               "event": "${{ env.DOCKER_CONTEXT_EVENT }}",
@@ -74,6 +74,7 @@ jobs:
               "run_id": "${{ env.DOCKER_CONTEXT_RUN_ID }}",
               "organization": "${{ env.DOCKER_CONTEXT_ORGANIZATION }}",
               "platform": "${{ env.DOCKER_CONTEXT_PLATFORM }}"
+              "target": "${{ env.TARGET }}"
             }
 
 
