@@ -63,7 +63,7 @@ runs:
       shell: bash
       run: |
         # source or execute the script from the action's root directory
-        source "${GITHUB_ACTION_PATH}/context.sh"
+        source "${GITHUB_ACTION_PATH}/context"
         echo "Script was sourced successfully."
         # echo "TARGET=${{ inputs.docker_username }}/${{ inputs.image_name }}:1.1.${{ inputs.run_number }}" >> .github/context
 
