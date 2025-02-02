@@ -9,11 +9,11 @@ workflow:
   name: scribe-ci-test
 
 stages:
-    - ddocker-hook-image
+    - docker-hook-image
 
 
-basic-docker-pre-release:
-  stage: basic-docker-pre-release
+docker-hook-image:
+  stage: docker-hook-image
   rules:
     - if: $CI_COMMIT_BRANCH =~ /^pre-release.*$/
   variables:
