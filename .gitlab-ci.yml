@@ -2,18 +2,18 @@ image: ubuntu:latest
 before_script:
   - apt update || apk update
   - apt install git curl -y || apk add git curl
-  # - curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/master/install.sh | sh -s -- -b /usr/local/bin
+  - curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/master/install.sh | sh -s -- -b /usr/local/bin
   - export PATH=$PATH:/usr/bin:/etc/docker
 
 workflow:
   name: scribe-ci-test
 
 stages:
-    - docker-hook-image
+    - basic-docker-pre-release
 
 
-docker-hook-image:
-  stage: docker-hook-image
+basic-docker-pre-release:
+  stage: basic-docker-pre-release
   rules:
     - if: $CI_COMMIT_BRANCH =~ /^pre-release.*$/
   variables:
@@ -31,4 +31,9 @@ docker-hook-image:
       - docker:dind
     script:
       - docker pull busybox:latest
-      # - docker save -o busybox.tar busybox:latest
+      - docker save -o busybox.tar busybox:latest
+      - valint bom docker-archive:busybox.tar
+          --context-type gitlab
+          --output-directory ./scribe/valint
+          --output-file ./busybox.json
+          -vv -f
