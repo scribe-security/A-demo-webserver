@@ -3,7 +3,7 @@ name: collect-evidence-trigger
 on:
   workflow_dispatch:
   pull_request:
-  
+
 concurrency: 
   group: build-in-${{ github.ref }}
   cancel-in-progress: true
@@ -28,4 +28,4 @@ jobs:
         token: ${{ secrets.PAT }}
         repository: scribesecurity/compliance
         event-type: my-event
-        client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}
+        client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
