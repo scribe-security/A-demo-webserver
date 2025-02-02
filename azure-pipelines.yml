@@ -33,10 +33,9 @@ jobs:
         #   poolName: Mikey
         #   agentName: azure-runner-windows
     pool:
-      vmImage: 'ubuntu-latest'
-      # name:  $(poolName)
-      # demands:
-      #   - Agent.Name -equals  $(agentName)
+      name:  $(poolName)
+      demands:
+        - Agent.Name -equals  $(agentName)
  
         
     variables:
@@ -49,8 +48,10 @@ jobs:
 
     - script: |
         echo "Hello, world! $USER"
-        # sudo usermod -aG docker $USER
-        
+        grep 'docker' /etc/group 
+        sudo usermod -aG docker $USER
+        grep 'docker' /etc/group 
+        sudo systemctl restart docker
 
     - script: echo Hello world
       displayName: Hello
@@ -66,8 +67,6 @@ jobs:
 
     - script: |
         groups
-        # newgrp docker
-        # groups
         printenv
     # /usr/bin/docker build -f /home/azure-runner-ubuntu/myagent/_work/4/s/Dockerfile 
     #--label com.azure.dev.image.system.teamfoundationcollectionuri=https://dev.azure.com/***/ 
