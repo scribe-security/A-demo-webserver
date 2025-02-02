@@ -1,0 +1,34 @@
+image: ubuntu:latest
+before_script:
+  - apt update || apk update
+  - apt install git curl -y || apk add git curl
+  # - curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/master/install.sh | sh -s -- -b /usr/local/bin
+  - export PATH=$PATH:/usr/bin:/etc/docker
+
+workflow:
+  name: scribe-ci-test
+
+stages:
+    - ddocker-hook-image
+
+
+basic-docker-pre-release:
+  stage: basic-docker-pre-release
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^pre-release.*$/
+  variables:
+    ENV: dev
+    VALINT_SCRIBE_DISABLE: true
+  extends: .basic-docker
+
+.basic-docker:
+    tags: [ saas-linux-large-amd64 ]
+    image: docker:latest
+    variables:
+      DOCKER_DRIVER: overlay2
+      DOCKER_TLS_CERTDIR: "/certs"
+    services:
+      - docker:dind
+    script:
+      - docker pull busybox:latest
+      # - docker save -o busybox.tar busybox:latest
