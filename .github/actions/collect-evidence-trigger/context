@@ -312,7 +312,7 @@ main() {
 
     # UPPER CASE
     k="$(echo "$k" | tr '[:lower:]' '[:upper:]')"
-    export DOCKER_CONTEXT_$k="$v"
+    export DOCKER_CONTEXT_$k="$v" >> $GITHUB_ENV
     echo "$k=$v"
   done
 }
