@@ -57,3 +57,12 @@ runs:
             "platform": "${{ env.DOCKER_CONTEXT_PLATFORM }}",
             "target": "${{ inputs.target || env.TARGET }}"
           }
+      env:
+        DOCKER_CONTEXT_GIT_COMMIT: ${{ env.DOCKER_CONTEXT_GIT_COMMIT }}
+        DOCKER_CONTEXT_GIT_URL: ${{ env.DOCKER_CONTEXT_GIT_URL }}
+        DOCKER_CONTEXT_GIT_REF: ${{ env.DOCKER_CONTEXT_GIT_REF }}
+        DOCKER_CONTEXT_EVENT: ${{ env.DOCKER_CONTEXT_EVENT }}
+        DOCKER_CONTEXT_WORKFLOW: ${{ env.DOCKER_CONTEXT_WORKFLOW }}
+        DOCKER_CONTEXT_RUN_ID: ${{ env.DOCKER_CONTEXT_RUN_ID }}
+        DOCKER_CONTEXT_ORGANIZATION: ${{ env.DOCKER_CONTEXT_ORGANIZATION }}
+        DOCKER_CONTEXT_PLATFORM: ${{ env.DOCKER_CONTEXT_PLATFORM }}
