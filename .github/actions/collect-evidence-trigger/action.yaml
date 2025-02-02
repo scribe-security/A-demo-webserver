@@ -7,19 +7,19 @@ inputs:
     required: false
   docker_username:
     description: "Docker username (usually stored as a secret)"
-    required: true
+    required: false
   image_name:
     description: "Name of the Docker image"
-    required: true
+    required: false
   run_number:
     description: "GitHub Actions run number"
-    required: true
-  trigger_pat:
+    required: false
+  token:
     description: "PAT used to trigger repository dispatch (e.g., a secret)"
     required: true
   repository:
     description: "Target repository in the format 'owner/repo'"
-    required: true
+    required: false
   event_type:
     description: "Repository Dispatch event type (e.g., 'my-event')"
     default: "my-event"
@@ -70,7 +70,7 @@ runs:
     - name: Repository Dispatch
       uses: peter-evans/repository-dispatch@v3
       with:
-        token: ${{ inputs.trigger_pat }}
+        token: ${{ inputs.token }}
         repository: ${{ inputs.repository }}
         event-type: ${{ inputs.event_type }}
         client-payload: |-

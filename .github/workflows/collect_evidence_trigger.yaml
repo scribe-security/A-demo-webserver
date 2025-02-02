@@ -55,6 +55,7 @@ jobs:
       - uses: ./.github/actions/collect-evidence-trigger
         with:
           target: my_target
+          token: ${{ secrets.TRIGGER_PAT }}
 
       # - run: |
       #     source .github/context
