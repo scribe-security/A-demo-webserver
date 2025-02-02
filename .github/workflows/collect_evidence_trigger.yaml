@@ -57,7 +57,7 @@ jobs:
           target: my_target
           token: ${{ secrets.TRIGGER_PAT }}
           repository: scribe-security/compliance
-          event-type: my-event
+          event_type: my-event
 
       # - run: |
       #     source .github/context
