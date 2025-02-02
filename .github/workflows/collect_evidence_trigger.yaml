@@ -53,7 +53,7 @@ jobs:
           DEBUG: true
 
       - run: |
-          bash .github/context
+          source .github/context
           printenv
 
       - name: Repository Dispatch
@@ -63,5 +63,4 @@ jobs:
           repository: scribe-security/compliance
           event-type: my-event
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
-
 
