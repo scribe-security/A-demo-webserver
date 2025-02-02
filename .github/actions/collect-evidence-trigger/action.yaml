@@ -3,7 +3,7 @@ description: "Appends the TARGET to .github/context and triggers a repository di
 
 inputs:
   target:
-    description: "Docker image target (e.g., ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}})"
+    description: "Docker image target"
     required: false
   docker_username:
     description: "Docker username (usually stored as a secret)"
@@ -12,7 +12,7 @@ inputs:
     description: "Name of the Docker image"
     required: true
   run_number:
-    description: "GitHub Actions run number (e.g., ${{ github.run_number }})"
+    description: "GitHub Actions run number"
     required: true
   trigger_pat:
     description: "PAT used to trigger repository dispatch (e.g., a secret)"
