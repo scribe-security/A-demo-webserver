@@ -63,6 +63,8 @@ jobs:
     - script: ls -lh /var/run/
       displayName: see info
 
+    - script: |
+        groups
 
     # /usr/bin/docker build -f /home/azure-runner-ubuntu/myagent/_work/4/s/Dockerfile 
     #--label com.azure.dev.image.system.teamfoundationcollectionuri=https://dev.azure.com/***/ 
