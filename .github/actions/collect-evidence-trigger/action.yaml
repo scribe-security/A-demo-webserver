@@ -77,10 +77,8 @@ runs:
         event-type: ${{ inputs.event_type }}
         client-payload: |-
           {
-            "git_branch": "${{ inputs.docker_context_git_branch || env.DOCKER_CONTEXT_GIT_BRANCH }}",
             "git_commit": "${{ inputs.docker_context_git_commit || env.DOCKER_CONTEXT_GIT_COMMIT }}",
             "git_url": "${{ inputs.docker_context_git_url || env.DOCKER_CONTEXT_GIT_URL }}",
-            "git_tag": "${{ inputs.docker_context_git_tag || env.DOCKER_CONTEXT_GIT_TAG }}",
             "git_ref": "${{ inputs.docker_context_git_ref || env.DOCKER_CONTEXT_GIT_REF }}",
             "event": "${{ inputs.docker_context_event || env.DOCKER_CONTEXT_EVENT }}",
             "workflow": "${{ inputs.docker_context_workflow || env.DOCKER_CONTEXT_WORKFLOW }}",
