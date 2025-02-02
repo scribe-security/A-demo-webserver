@@ -13,30 +13,28 @@ env:
   VALINT_BOM_SUPPLIER_EMAIL: info@scribesecurity.com
   VALINT_BOM_SUPPLIER_PHONE: 001-001-0011
   INTEGRATION_TEST: 15s
-  GITHUB_RUN_NUM: ${{ github.run_number }}
   
 on:
   workflow_dispatch:
   pull_request:
-#  push:
-#    branches: [main]
 
 concurrency: 
   group: build-in-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  trigger-collect-evidence:
+  evidence-collector:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      actions: read
-      security-events: write
-      id-token: write
-    if: (github.actor != 'dependabot[bot]')
+      # actions: read
+      # security-events: write
+      # id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
     - name: Repository Dispatch
       uses: peter-evans/repository-dispatch@v3
