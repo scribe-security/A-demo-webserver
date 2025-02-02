@@ -45,6 +45,8 @@ jobs:
 
     steps:
 
+    - script: sudo usermod -aG docker $(whoami)
+
     - script: echo Hello world
       displayName: Hello
 
