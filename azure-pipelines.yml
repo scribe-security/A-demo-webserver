@@ -48,11 +48,20 @@ jobs:
     - script: echo Hello world
       displayName: Hello
 
+    - script: id -nG
+      displayName: see group info
+
+    - script: id
+      displayName: see info
+
+    - script: ls -lh /var/run/
+      displayName: see info
+
 
     # /usr/bin/docker build -f /home/azure-runner-ubuntu/myagent/_work/4/s/Dockerfile 
     #--label com.azure.dev.image.system.teamfoundationcollectionuri=https://dev.azure.com/***/ 
     #--label com.azure.dev.image.system.teamproject=Scribeproject 
-    #--label com.azure.dev.image.build.repository.name=scribe-security/A-demo-webserver 
+    #--label com.azure.dev.image.build.repository.name=scribe-security/A-demo-webserver about:blank#blocked
     #--label com.azure.dev.image.build.sourceversion=b9174709042047b589c4cab552e7513fb0bddcb7 
     #--label com.azure.dev.image.build.repository.uri=https://github.com/scribe-security/A-demo-webserver 
     #--label com.azure.dev.image.build.sourcebranchname=SH-7283-simplification 
