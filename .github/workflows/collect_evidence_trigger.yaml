@@ -37,45 +37,49 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Log in to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # - name: Log in to DockerHub
+      #   uses: docker/login-action@v2
+      #   with:
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
           
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          push: false
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
-          load: true
-        env:
-          DEBUG: true
+      # - name: Build and push Docker image
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     push: false
+      #     tags: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+      #     load: true
+      #   env:
+      #     DEBUG: true
 
-      - run: |
-          source .github/context
-          echo "TARGET=${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}" >> .github/context
-
-      - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v3
+      - uses: ./.github/actions/collect-evidence-trigger
         with:
-          token: ${{ secrets.TRIGGER_PAT }}
-          repository: scribe-security/compliance
-          event-type: my-event
-          client-payload: |-
-            {
-              "git_branch": "${{ env.DOCKER_CONTEXT_GIT_BRANCH }}", 
-              "git_commit": "${{ env.DOCKER_CONTEXT_GIT_COMMIT }}",
-              "git_url": "${{ env.DOCKER_CONTEXT_GIT_URL }}",
-              "git_tag": "${{ env.DOCKER_CONTEXT_GIT_TAG }}",
-              "git_ref": "${{ env.DOCKER_CONTEXT_GIT_REF }}",
-              "event": "${{ env.DOCKER_CONTEXT_EVENT }}",
-              "workflow": "${{ env.DOCKER_CONTEXT_WORKFLOW }}",
-              "run_id": "${{ env.DOCKER_CONTEXT_RUN_ID }}",
-              "organization": "${{ env.DOCKER_CONTEXT_ORGANIZATION }}",
-              "platform": "${{ env.DOCKER_CONTEXT_PLATFORM }}"
-              "target": "${{ env.TARGET }}"
-            }
+          target: my_target
+
+      # - run: |
+      #     source .github/context
+      #     echo "TARGET=${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}" >> .github/context
+
+      # - name: Repository Dispatch
+      #   uses: peter-evans/repository-dispatch@v3
+      #   with:
+      #     token: ${{ secrets.TRIGGER_PAT }}
+      #     repository: scribe-security/compliance
+      #     event-type: my-event
+      #     client-payload: |-
+      #       {
+      #         "git_branch": "${{ env.DOCKER_CONTEXT_GIT_BRANCH }}", 
+      #         "git_commit": "${{ env.DOCKER_CONTEXT_GIT_COMMIT }}",
+      #         "git_url": "${{ env.DOCKER_CONTEXT_GIT_URL }}",
+      #         "git_tag": "${{ env.DOCKER_CONTEXT_GIT_TAG }}",
+      #         "git_ref": "${{ env.DOCKER_CONTEXT_GIT_REF }}",
+      #         "event": "${{ env.DOCKER_CONTEXT_EVENT }}",
+      #         "workflow": "${{ env.DOCKER_CONTEXT_WORKFLOW }}",
+      #         "run_id": "${{ env.DOCKER_CONTEXT_RUN_ID }}",
+      #         "organization": "${{ env.DOCKER_CONTEXT_ORGANIZATION }}",
+      #         "platform": "${{ env.DOCKER_CONTEXT_PLATFORM }}"
+      #         "target": "${{ env.TARGET }}"
+      #       }
 
 
 

@@ -1,0 +1,89 @@
+name: "Post Step Action"
+description: "Appends the TARGET to .github/context and triggers a repository dispatch"
+
+inputs:
+  target:
+    description: "Docker image target (e.g., ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}})"
+    required: false
+  docker_username:
+    description: "Docker username (usually stored as a secret)"
+    required: true
+  image_name:
+    description: "Name of the Docker image"
+    required: true
+  run_number:
+    description: "GitHub Actions run number (e.g., ${{ github.run_number }})"
+    required: true
+  trigger_pat:
+    description: "PAT used to trigger repository dispatch (e.g., a secret)"
+    required: true
+  repository:
+    description: "Target repository in the format 'owner/repo'"
+    required: true
+  event_type:
+    description: "Repository Dispatch event type (e.g., 'my-event')"
+    default: "my-event"
+  # The following inputs are optional. You can define them as needed
+  # or simply rely on environment variables within your workflow.
+  docker_context_git_branch:
+    description: "Git branch from context"
+    required: false
+  docker_context_git_commit:
+    description: "Git commit from context"
+    required: false
+  docker_context_git_url:
+    description: "Git URL from context"
+    required: false
+  docker_context_git_tag:
+    description: "Git tag from context"
+    required: false
+  docker_context_git_ref:
+    description: "Git ref from context"
+    required: false
+  docker_context_event:
+    description: "Event name from context"
+    required: false
+  docker_context_workflow:
+    description: "Workflow name from context"
+    required: false
+  docker_context_run_id:
+    description: "Run ID from context"
+    required: false
+  docker_context_organization:
+    description: "Organization name from context"
+    required: false
+  docker_context_platform:
+    description: "Platform value from context"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run local context script
+      shell: bash
+      run: |
+        # source or execute the script from the action's root directory
+        source "${GITHUB_ACTION_PATH}/context.sh"
+        echo "Script was sourced successfully."
+        # echo "TARGET=${{ inputs.docker_username }}/${{ inputs.image_name }}:1.1.${{ inputs.run_number }}" >> .github/context
+
+    - name: Repository Dispatch
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ inputs.trigger_pat }}
+        repository: ${{ inputs.repository }}
+        event-type: ${{ inputs.event_type }}
+        client-payload: |-
+          {
+            "git_branch": "${{ inputs.docker_context_git_branch || env.DOCKER_CONTEXT_GIT_BRANCH }}",
+            "git_commit": "${{ inputs.docker_context_git_commit || env.DOCKER_CONTEXT_GIT_COMMIT }}",
+            "git_url": "${{ inputs.docker_context_git_url || env.DOCKER_CONTEXT_GIT_URL }}",
+            "git_tag": "${{ inputs.docker_context_git_tag || env.DOCKER_CONTEXT_GIT_TAG }}",
+            "git_ref": "${{ inputs.docker_context_git_ref || env.DOCKER_CONTEXT_GIT_REF }}",
+            "event": "${{ inputs.docker_context_event || env.DOCKER_CONTEXT_EVENT }}",
+            "workflow": "${{ inputs.docker_context_workflow || env.DOCKER_CONTEXT_WORKFLOW }}",
+            "run_id": "${{ inputs.docker_context_run_id || env.DOCKER_CONTEXT_RUN_ID }}",
+            "organization": "${{ inputs.docker_context_organization || env.DOCKER_CONTEXT_ORGANIZATION }}",
+            "platform": "${{ inputs.docker_context_platform || env.DOCKER_CONTEXT_PLATFORM }}",
+            "target": "${{ inputs.target || env.TARGET }}"
+          }
