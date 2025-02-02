@@ -67,14 +67,14 @@ jobs:
               "git_branch": "${{ env.DOCKER_CONTEXT_GIT_BRANCH }}", 
               "git_commit": "${{ env.DOCKER_CONTEXT_GIT_COMMIT }}",
               "git_url": "${{ env.DOCKER_CONTEXT_GIT_URL }}"
+              "git_tag": "${{ env.DOCKER_CONTEXT_GIT_TAG }}",
+              "git_ref": "${{ env.DOCKER_CONTEXT_GIT_REF }}",
+              "event": "${{ env.DOCKER_CONTEXT_EVENT }}",
+              "workflow": "${{ env.DOCKER_CONTEXT_WORKFLOW }}",
+              "run_id": "${{ env.DOCKER_CONTEXT_RUN_ID }}",
+              "organization": "${{ env.DOCKER_CONTEXT_ORGANIZATION }}",
+              "platform": "${{ env.DOCKER_CONTEXT_PLATFORM }}"
             }
 
 
 
-        # "git_tag": "${{ github.DOCKER_CONTEXT_GIT_TAG }}",
-        # "git_ref": "${{ github.DOCKER_CONTEXT_GIT_REF }}",
-        # "event": "${{ github.DOCKER_CONTEXT_EVENT }}",
-        # "workflow": "${{ github.DOCKER_CONTEXT_WORKFLOW }}",
-        # "run_id": "${{ github.DOCKER_CONTEXT_RUN_ID }}",
-        # "organization": "${{ github.DOCKER_CONTEXT_ORGANIZATION }}",
-        # "platform": "${{ github.DOCKER_CONTEXT_PLATFORM }}",
