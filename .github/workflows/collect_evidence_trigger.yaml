@@ -65,8 +65,8 @@ jobs:
           client-payload: |-
             {
               "git_branch": "${{ env.DOCKER_CONTEXT_GIT_BRANCH }}", 
-              "git_commit": "${{ github.DOCKER_CONTEXT_GIT_COMMIT }}",
-              "git_url": "${{ github.DOCKER_CONTEXT_GIT_URL }}"
+              "git_commit": "${{ env.DOCKER_CONTEXT_GIT_COMMIT }}",
+              "git_url": "${{ env.DOCKER_CONTEXT_GIT_URL }}"
             }
 
 
