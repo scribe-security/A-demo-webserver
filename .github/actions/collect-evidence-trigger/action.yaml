@@ -26,36 +26,6 @@ inputs:
     required: true
   # The following inputs are optional. You can define them as needed
   # or simply rely on environment variables within your workflow.
-  docker_context_git_branch:
-    description: "Git branch from context"
-    required: false
-  docker_context_git_commit:
-    description: "Git commit from context"
-    required: false
-  docker_context_git_url:
-    description: "Git URL from context"
-    required: false
-  docker_context_git_tag:
-    description: "Git tag from context"
-    required: false
-  docker_context_git_ref:
-    description: "Git ref from context"
-    required: false
-  docker_context_event:
-    description: "Event name from context"
-    required: false
-  docker_context_workflow:
-    description: "Workflow name from context"
-    required: false
-  docker_context_run_id:
-    description: "Run ID from context"
-    required: false
-  docker_context_organization:
-    description: "Organization name from context"
-    required: false
-  docker_context_platform:
-    description: "Platform value from context"
-    required: false
 
 runs:
   using: "composite"
@@ -77,13 +47,13 @@ runs:
         event-type: ${{ inputs.event_type }}
         client-payload: |-
           {
-            "git_commit": "${{ inputs.docker_context_git_commit || env.DOCKER_CONTEXT_GIT_COMMIT }}",
-            "git_url": "${{ inputs.docker_context_git_url || env.DOCKER_CONTEXT_GIT_URL }}",
-            "git_ref": "${{ inputs.docker_context_git_ref || env.DOCKER_CONTEXT_GIT_REF }}",
-            "event": "${{ inputs.docker_context_event || env.DOCKER_CONTEXT_EVENT }}",
-            "workflow": "${{ inputs.docker_context_workflow || env.DOCKER_CONTEXT_WORKFLOW }}",
-            "run_id": "${{ inputs.docker_context_run_id || env.DOCKER_CONTEXT_RUN_ID }}",
-            "organization": "${{ inputs.docker_context_organization || env.DOCKER_CONTEXT_ORGANIZATION }}",
-            "platform": "${{ inputs.docker_context_platform || env.DOCKER_CONTEXT_PLATFORM }}",
+            "git_commit": "${{env.DOCKER_CONTEXT_GIT_COMMIT }}",
+            "git_url": "${{ env.DOCKER_CONTEXT_GIT_URL }}",
+            "git_ref": "${{ env.DOCKER_CONTEXT_GIT_REF }}",
+            "event": "${{ env.DOCKER_CONTEXT_EVENT }}",
+            "workflow": "${{ env.DOCKER_CONTEXT_WORKFLOW }}",
+            "run_id": "${{ env.DOCKER_CONTEXT_RUN_ID }}",
+            "organization": "${{ env.DOCKER_CONTEXT_ORGANIZATION }}",
+            "platform": "${{ env.DOCKER_CONTEXT_PLATFORM }}",
             "target": "${{ inputs.target || env.TARGET }}"
           }
