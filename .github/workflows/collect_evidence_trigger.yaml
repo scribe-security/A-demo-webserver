@@ -52,6 +52,10 @@ jobs:
         env:
           DEBUG: true
 
+      - run: |
+          bash .github/context
+          printenv
+
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v3
         with:
