@@ -51,7 +51,8 @@ runs:
         echo "${JSON_STRING}"
         gh extension install mdb/gh-dispatch || true
         gh dispatch repository --event-type my-event --client-payload "$JSON_STRING" --repo scribe-security/compliance --workflow scribe_scan
-
+      env:
+        GH_TOKEN: ${{ inputs.token }}
 
     # - name: Repository Dispatch
     #   uses: peter-evans/repository-dispatch@v3
