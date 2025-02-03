@@ -57,7 +57,6 @@ jobs:
       uses: scribe-security/compliance/.github/workflows/scribe-scan.yml@main
       secrets:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SCRIBE_TOKEN: ${{ secrets.SCRIBE_TOKEN }}
       with:
       env:
 
