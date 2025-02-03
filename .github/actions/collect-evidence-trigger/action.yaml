@@ -31,32 +31,32 @@ runs:
   using: "composite"
   steps:
 
-    # - name: Scribe post job hook
-    #   uses: ./.github/actions/with-post-step
-    #   with:
-    #     main: echo "Installing scribe post step"
-    #     post: |
-    #       echo "Rebuilding cache..."
-    #       source "${GITHUB_ACTION_PATH}/context"
-    #       printenv
+    - name: Scribe post job hook
+      uses: ./.github/actions/with-post-step
+      with:
+        main: echo "Installing scribe post step"
+        post: |
+          echo "Rebuilding cache..."
+          source "${GITHUB_ACTION_PATH}/context"
+          printenv
 
-    #       JSON_STRING=$( jq -n \
-    #                     --arg git_commit "${DOCKER_CONTEXT_GIT_COMMIT}" \
-    #                     --arg git_url "${DOCKER_CONTEXT_GIT_URL}" \
-    #                     --arg git_ref "${DOCKER_CONTEXT_GIT_REF}" \
-    #                     --arg event "${DOCKER_CONTEXT_EVENT}" \
-    #                     --arg workflow "${DOCKER_CONTEXT_WORKFLOW}" \
-    #                     --arg run_id "${DOCKER_CONTEXT_RUN_ID}" \
-    #                     --arg organization "${DOCKER_CONTEXT_ORGANIZATION}" \
-    #                     --arg platform "${DOCKER_CONTEXT_PLATFORM}" \
-    #                     --arg target "${{ inputs.target || env.TARGET || env.EVIDENCE_TARGET }}" \
-    #                     '{git_commit: $git_commit, git_url: $git_url, git_ref: $git_ref, event: $event, workflow: $workflow, run_id: $run_id, organization: $organization, platform: $platform, target: $target}' )
+          JSON_STRING=$( jq -n \
+                        --arg git_commit "${DOCKER_CONTEXT_GIT_COMMIT}" \
+                        --arg git_url "${DOCKER_CONTEXT_GIT_URL}" \
+                        --arg git_ref "${DOCKER_CONTEXT_GIT_REF}" \
+                        --arg event "${DOCKER_CONTEXT_EVENT}" \
+                        --arg workflow "${DOCKER_CONTEXT_WORKFLOW}" \
+                        --arg run_id "${DOCKER_CONTEXT_RUN_ID}" \
+                        --arg organization "${DOCKER_CONTEXT_ORGANIZATION}" \
+                        --arg platform "${DOCKER_CONTEXT_PLATFORM}" \
+                        --arg target "${{ inputs.target || env.TARGET || env.EVIDENCE_TARGET }}" \
+                        '{git_commit: $git_commit, git_url: $git_url, git_ref: $git_ref, event: $event, workflow: $workflow, run_id: $run_id, organization: $organization, platform: $platform, target: $target}' )
 
-    #       echo "${JSON_STRING}"
-    #       gh extension install mdb/gh-dispatch || true
-    #       gh dispatch repository --event-type ${{ inputs.event_type }} --client-payload "$JSON_STRING" --repo scribe-security/compliance --workflow scribe_scan
-    #   env:
-    #     GH_TOKEN: ${{ inputs.token }}
+          echo "${JSON_STRING}"
+          gh extension install mdb/gh-dispatch || true
+          gh dispatch repository --event-type ${{ inputs.event_type }} --client-payload "$JSON_STRING" --repo scribe-security/compliance --workflow scribe_scan
+      env:
+        GH_TOKEN: ${{ inputs.token }}
 
     # - name: Scribe Send Event step
     #   run: |
