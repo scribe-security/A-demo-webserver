@@ -56,7 +56,7 @@ jobs:
     needs: build
     permissions:
       contents: write
-    uses: scribe-security/compliance/.github/workflows/scribe-scan.yml@main
+    uses: scribe-security/compliance/.github/workflows/scribe_scan.yml@main
     secrets:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
