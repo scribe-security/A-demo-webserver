@@ -32,7 +32,7 @@ runs:
   steps:
 
     - name: Scribe post job hook
-      uses: ./.github/actions/with-post-steps
+      uses: ./.github/actions/with-post-step
       with:
         post: |
           # source or execute the script from the action's root directory
