@@ -31,7 +31,7 @@ runs:
   using: "composite"
   steps:
 
-    - uses: ./.github/actions/with-post-steps
+    - uses: ./.github/actions/with-post-step
       with:
         main: echo "Restoring cache..."
         post: echo "Rebuilding cache..."
