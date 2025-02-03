@@ -34,7 +34,9 @@ runs:
     - uses: ./.github/actions/with-post-step
       with:
         main: echo "Restoring cache..."
-        post: echo "Rebuilding cache..."
+        post: |
+          echo "Rebuilding cache..."
+          source "${GITHUB_ACTION_PATH}/context"
 
     # - name: Scribe post job hook
     #   uses: ./.github/actions/with-post-step
