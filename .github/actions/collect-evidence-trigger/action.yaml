@@ -33,8 +33,8 @@ runs:
 
     - name: Scribe post job hook
       uses: gacts/run-and-post-run@v1
-      shell: bash
       with:
+        shell: bash
         run: echo "First"
         post: |
           # source or execute the script from the action's root directory
