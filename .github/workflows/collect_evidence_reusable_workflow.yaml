@@ -59,7 +59,7 @@ jobs:
       contents: write
     uses: scribe-security/compliance/.github/workflows/scribe_scan.yml@main
     with:
-      target: scribe-security/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+      target: scribe-security/test_mikey:1.1.${{ github.run_number }}
 
       # - name: Add Docker image to env
       #   run: |
