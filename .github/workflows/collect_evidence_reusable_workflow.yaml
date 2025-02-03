@@ -1,4 +1,4 @@
-name: collect-evidence-trigger
+name: collect-evidence-reusable-workflow
   
 env:
   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
@@ -17,14 +17,14 @@ env:
 
 on:
   workflow_dispatch:
-  # pull_request:
+  pull_request:
 
 concurrency: 
   group: build-in-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  evidence-collector:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -52,15 +52,26 @@ jobs:
         env:
           DEBUG: true
 
-      - name: Add Docker image to env
-        run: |
-          echo "EVIDENCE_TARGET=${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}" >> $GITHUB_ENV
+    scribe_check:
+      needs: build
+      uses: scribe-security/compliance/.github/workflows/scribe-scan.yml@main
+      secrets:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SCRIBE_TOKEN: ${{ secrets.SCRIBE_TOKEN }}
+      with:
+      env:
 
-      - uses: ./.github/actions/collect-evidence-trigger
-        with:
-          token: ${{ secrets.TRIGGER_PAT }}
-          repository: scribe-security/compliance
-          event_type: my-event
+
+
+      # - name: Add Docker image to env
+      #   run: |
+      #     echo "EVIDENCE_TARGET=${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}" >> $GITHUB_ENV
+
+      # - uses: ./.github/actions/collect-evidence-trigger
+      #   with:
+      #     token: ${{ secrets.TRIGGER_PAT }}
+      #     repository: scribe-security/compliance
+      #     event_type: my-event
 
 
       # - run: |
