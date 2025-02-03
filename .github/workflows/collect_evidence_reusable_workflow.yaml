@@ -52,13 +52,14 @@ jobs:
         env:
           DEBUG: true
 
+
   scribe_check:
     needs: build
     permissions:
       contents: write
     uses: scribe-security/compliance/.github/workflows/scribe_scan.yml@main
-
-
+    with:
+      target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
 
       # - name: Add Docker image to env
       #   run: |
