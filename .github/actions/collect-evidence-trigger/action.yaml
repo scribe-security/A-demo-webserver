@@ -46,7 +46,8 @@ runs:
                       --arg run_id "${DOCKER_CONTEXT_RUN_ID}" \
                       --arg organization "${DOCKER_CONTEXT_ORGANIZATION}" \
                       --arg platform "${DOCKER_CONTEXT_PLATFORM}" \
-                      '{git_commit: $git_commit, git_url: $git_url, git_ref: $git_ref, event: $event, workflow: $workflow, run_id: $run_id, organization: $organization, platform: $platform}' )
+                      --arg target "${{ inputs.target || env.TARGET || env.EVIDENCE_TARGET }}" \
+                      '{git_commit: $git_commit, git_url: $git_url, git_ref: $git_ref, event: $event, workflow: $workflow, run_id: $run_id, organization: $organization, platform: $platform, target: $target}' )
 
         echo "${JSON_STRING}"
         gh extension install mdb/gh-dispatch || true
