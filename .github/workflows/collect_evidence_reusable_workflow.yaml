@@ -58,8 +58,11 @@ jobs:
     permissions:
       contents: write
     uses: scribe-security/compliance/.github/workflows/scribe_scan.yml@main
+    sec
     with:
-      target: ${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+      target: ${{ env.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
       # - name: Add Docker image to env
       #   run: |
