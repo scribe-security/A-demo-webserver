@@ -58,8 +58,6 @@ jobs:
     permissions:
       contents: write
     uses: scribe-security/compliance/.github/workflows/scribe_scan.yml@main
-    with:
-    env:
 
 
 
