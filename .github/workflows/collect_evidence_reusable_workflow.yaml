@@ -58,7 +58,6 @@ jobs:
     permissions:
       contents: write
     uses: scribe-security/compliance/.github/workflows/scribe_scan.yml@main
-    sec
     with:
       target: ${{ env.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}
     env:
