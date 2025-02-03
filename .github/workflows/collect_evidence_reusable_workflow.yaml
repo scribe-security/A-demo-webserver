@@ -52,13 +52,15 @@ jobs:
         env:
           DEBUG: true
 
-    scribe_check:
-      needs: build
-      uses: scribe-security/compliance/.github/workflows/scribe-scan.yml@main
-      secrets:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-      env:
+  scribe_check:
+    needs: build
+    permissions:
+      contents: write
+    uses: scribe-security/compliance/.github/workflows/scribe-scan.yml@main
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+    env:
 
 
 
