@@ -33,6 +33,7 @@ runs:
 
     - name: Scribe post job hook
       uses: gacts/run-and-post-run@v1
+      shell: bash
       with:
         run: echo "First"
         post: |
