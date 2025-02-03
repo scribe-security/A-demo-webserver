@@ -32,10 +32,8 @@ runs:
   steps:
 
     - name: Scribe post job hook
-      uses: gacts/run-and-post-run@v1
+      uses: ./.github/actions/with-post-steps
       with:
-        shell: bash
-        run: echo "First"
         post: |
           # source or execute the script from the action's root directory
           source "${GITHUB_ACTION_PATH}/context"
