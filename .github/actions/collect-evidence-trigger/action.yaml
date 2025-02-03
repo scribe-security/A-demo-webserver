@@ -31,9 +31,10 @@ runs:
   using: "composite"
   steps:
 
-    - uses: ./.github/actions/with-post-step
+    - name: Scribe post job hook
+      uses: ./.github/actions/with-post-step
       with:
-        main: echo "Restoring cache..."
+        main: echo "Installing scribe post step"
         post: |
           echo "Rebuilding cache..."
           source "${GITHUB_ACTION_PATH}/context"
@@ -57,7 +58,7 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.token }}
 
-        
+
     # - name: Scribe post job hook
     #   uses: ./.github/actions/with-post-step
     #   with:
