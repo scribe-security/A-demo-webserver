@@ -63,4 +63,4 @@ jobs:
     secrets:
       DISCOVER_GITHUB_TOKEN: ${{ secrets.TRIGGER_PAT }}
       DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
