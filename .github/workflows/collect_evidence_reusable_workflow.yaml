@@ -57,7 +57,7 @@ jobs:
     needs: build
     permissions:
       contents: write
-      id-token: read # For sigstore signing
+      id-token: write # For sigstore signing
     uses: scribe-security/compliance/.github/workflows/scribe_scan.yml@main
     with:
       target: scribe-security/test_mikey:1.1.${{ github.run_number }}
