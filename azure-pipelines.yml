@@ -26,8 +26,8 @@ jobs:
     strategy:
       matrix:
         linux_agent:
-          poolName: Default
-          # agentName: azure-runner-ubuntu
+          poolName: Mikey
+          agentName: azure-runner-ubuntu
 
         # windows_agent:
         #   poolName: Mikey
