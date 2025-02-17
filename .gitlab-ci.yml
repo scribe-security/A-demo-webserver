@@ -1,0 +1,37 @@
+image: ubuntu:latest
+before_script:
+  - apt update || apk update
+  - apt install git curl -y || apk add git curl
+  # - curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/master/install.sh | sh -s -- -b /usr/local/bin
+  - export PATH=$PATH:/usr/bin:/etc/docker
+
+workflow:
+  name: scribe-ci-test
+
+stages:
+    - docker-hook-image
+
+
+docker-hook-image:
+  stage: docker-hook-image
+  variables:
+    ENV: dev
+    VALINT_SCRIBE_DISABLE: true
+  extends: .basic-docker
+
+.basic-docker:
+    tags: [ saas-linux-large-amd64 ]
+    image: docker:latest
+    variables:
+      DOCKER_DRIVER: overlay2
+      DOCKER_TLS_CERTDIR: "/certs"
+    services:
+      - docker:dind
+    script:
+      - docker pull busybox:latest
+      # - docker save -o busybox.tar busybox:latest
+      # - valint bom docker-archive:busybox.tar
+      #     --context-type gitlab
+      #     --output-directory ./scribe/valint
+      #     --output-file ./busybox.json
+      #     -vv -f

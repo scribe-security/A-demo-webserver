@@ -1,0 +1,104 @@
+name: "Post Step Action"
+description: "Appends the TARGET to .github/context and triggers a repository dispatch"
+
+inputs:
+  target:
+    description: "Docker image target"
+    required: false
+  docker_username:
+    description: "Docker username (usually stored as a secret)"
+    required: false
+  image_name:
+    description: "Name of the Docker image"
+    required: false
+  run_number:
+    description: "GitHub Actions run number"
+    required: false
+  token:
+    description: "PAT used to trigger repository dispatch (e.g., a secret)"
+    required: true
+  repository:
+    description: "Target repository in the format 'owner/repo'"
+    required: true
+  event_type:
+    description: "Repository Dispatch event type (e.g., 'my-event')"
+    default: "scribe_collect_evidence"
+    required: true
+  # The following inputs are optional. You can define them as needed
+  # or simply rely on environment variables within your workflow.
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Scribe post job hook
+      uses: ./.github/actions/with-post-step
+      with:
+        main: echo "Installing scribe post step"
+        post: |
+          echo "Rebuilding cache..."
+          source "${GITHUB_ACTION_PATH}/context"
+          printenv
+
+          JSON_STRING=$( jq -n \
+                        --arg git_commit "${DOCKER_CONTEXT_GIT_COMMIT}" \
+                        --arg git_url "${DOCKER_CONTEXT_GIT_URL}" \
+                        --arg git_ref "${DOCKER_CONTEXT_GIT_REF}" \
+                        --arg event "${DOCKER_CONTEXT_EVENT}" \
+                        --arg workflow "${DOCKER_CONTEXT_WORKFLOW}" \
+                        --arg run_id "${DOCKER_CONTEXT_RUN_ID}" \
+                        --arg organization "${DOCKER_CONTEXT_ORGANIZATION}" \
+                        --arg platform "${DOCKER_CONTEXT_PLATFORM}" \
+                        --arg target "${{ inputs.target || env.TARGET || env.EVIDENCE_TARGET }}" \
+                        '{git_commit: $git_commit, git_url: $git_url, git_ref: $git_ref, event: $event, workflow: $workflow, run_id: $run_id, organization: $organization, platform: $platform, target: $target}' )
+
+          echo "${JSON_STRING}"
+          gh extension install mdb/gh-dispatch || true
+          gh dispatch repository --event-type ${{ inputs.event_type }} --client-payload "$JSON_STRING" --repo scribe-security/compliance --workflow scribe_scan
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+
+    # - name: Scribe Send Event step
+    #   run: |
+    #       # source or execute the script from the action's root directory
+    #       source "${GITHUB_ACTION_PATH}/context"
+    #       printenv
+
+    #       JSON_STRING=$( jq -n \
+    #                     --arg git_commit "${DOCKER_CONTEXT_GIT_COMMIT}" \
+    #                     --arg git_url "${DOCKER_CONTEXT_GIT_URL}" \
+    #                     --arg git_ref "${DOCKER_CONTEXT_GIT_REF}" \
+    #                     --arg event "${DOCKER_CONTEXT_EVENT}" \
+    #                     --arg workflow "${DOCKER_CONTEXT_WORKFLOW}" \
+    #                     --arg run_id "${DOCKER_CONTEXT_RUN_ID}" \
+    #                     --arg organization "${DOCKER_CONTEXT_ORGANIZATION}" \
+    #                     --arg platform "${DOCKER_CONTEXT_PLATFORM}" \
+    #                     --arg target "${{ inputs.target || env.TARGET || env.EVIDENCE_TARGET }}" \
+    #                     '{git_commit: $git_commit, git_url: $git_url, git_ref: $git_ref, event: $event, workflow: $workflow, run_id: $run_id, organization: $organization, platform: $platform, target: $target}' )
+
+    #       echo "${JSON_STRING}"
+    #       gh extension install mdb/gh-dispatch || true
+    #       gh dispatch repository --event-type ${{ inputs.event_type }} --client-payload "$JSON_STRING" --repo scribe-security/compliance --workflow scribe_scan
+    #   env:
+    #     GH_TOKEN: ${{ inputs.token }}
+
+    # - name: Repository Dispatch
+    #   uses: peter-evans/repository-dispatch@v3
+    #   with:
+    #     token: ${{ inputs.token }}
+    #     repository: ${{ inputs.repository }}
+    #     event-type: ${{ inputs.event_type }}
+    #     client-payload: |-
+    #       {
+    #         "git_commit": "${{env.DOCKER_CONTEXT_GIT_COMMIT }}",
+    #         "git_url": "${{ env.DOCKER_CONTEXT_GIT_URL }}",
+    #         "git_ref": "${{ env.DOCKER_CONTEXT_GIT_REF }}",
+    #         "event": "${{ env.DOCKER_CONTEXT_EVENT }}",
+    #         "workflow": "${{ env.DOCKER_CONTEXT_WORKFLOW }}",
+    #         "run_id": "${{ env.DOCKER_CONTEXT_RUN_ID }}",
+    #         "organization": "${{ Env.DOCKER_CONTEXT_ORGANIZATION }}",
+    #         "platform": "${{ env.DOCKER_CONTEXT_PLATFORM }}",
+    #         "target": "${{ inputs.target || env.TARGET }}"
+    #       }
+    #   env:
+    #     DOCKER_CONTEXT_PLATFORM: "github"
