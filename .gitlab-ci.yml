@@ -11,7 +11,12 @@ workflow:
 stages:
     - docker-hook-image
 
-
+.init_signing_keys: &init_signing_keys
+   - echo "Initiating signing keys"
+   - export ATTEST_KEY=$(echo $ATTEST_KEY_B64 | base64 -d | tr -d '\r' )
+   - export ATTEST_CERT=$(echo $ATTEST_CERT_B64 | base64 -d | tr -d '\r' )
+   - export ATTEST_CA=$(echo $ATTEST_CA_B64 | base64 -d | tr -d '\r' )
+   - printenv
 docker-hook-image:
   tags: [ k8s-gitlab-runner ]
   stage: docker-hook-image
@@ -36,9 +41,19 @@ docker-hook-image:
       - until docker info > /dev/null 2>&1; do
           echo "Docker daemon not available yet, waiting...";
           sleep 1;
-        done  
+        done
+      - *init_signing_keys
     script:
       - docker pull busybox:latest
+      - valint bom busybox:latest
+        --product-key das-scribe-poc-product
+        --product-version 1.0.1
+        --context-type gitlab
+        --format attest
+        --ca ${CA_CERT}
+        --cert ${SIGNERS_CERT}
+        --key ${SIGNERS_KEY}
+        -vv
       # - docker save -o busybox.tar busybox:latest
       # - valint bom docker-archive:busybox.tar
       #     --context-type gitlab
