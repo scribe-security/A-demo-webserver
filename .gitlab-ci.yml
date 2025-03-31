@@ -1,9 +1,6 @@
 image: ubuntu:latest
 before_script:
-  - apt update || apk update
-  - apt install git curl -y || apk add git curl
-  - curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/master/install.sh | sh -s -- -b /usr/local/bin
-  - export PATH=$PATH:/usr/bin:/etc/docker
+
 
 workflow:
   name: scribe-ci-test
@@ -11,12 +8,22 @@ workflow:
 stages:
     - docker-hook-image
 
+.install_valint: &install_valint
+  - apt update || apk update
+  - apt install git curl -y || apk add git curl
+  - curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/master/install.sh | sh -s -- -b /usr/local/bin
+  - export PATH=$PATH:/usr/bin:/etc/docker
+
 .init_signing_keys: &init_signing_keys
    - echo "Initiating signing keys"
-   - export ATTEST_KEY=$(echo $ATTEST_KEY_B64 | base64 -d | tr -d '\r' )
-   - export ATTEST_CERT=$(echo $ATTEST_CERT_B64 | base64 -d | tr -d '\r' )
-   - export ATTEST_CA=$(echo $ATTEST_CA_B64 | base64 -d | tr -d '\r' )
+  #  - export ATTEST_KEY=$(echo $ATTEST_KEY_B64 | base64 -d | tr -d '\r' )
+  #  - export ATTEST_CERT=$(echo $ATTEST_CERT_B64 | base64 -d | tr -d '\r' )
+  #  - export ATTEST_CA=$(echo $ATTEST_CA_B64 | base64 -d | tr -d '\r' )
+   - export SIGNERS_KEY=$(echo $ATTEST_KEY_B64 | base64 -d | tr -d '\r' )
+   - export SIGNERS_CERT=$(echo $ATTEST_CERT_B64 | base64 -d | tr -d '\r' )
+   - export CA_CERT=$(echo $ATTEST_CA_B64 | base64 -d | tr -d '\r' )
    - printenv
+
 docker-hook-image:
   tags: [ k8s-gitlab-runner ]
   stage: docker-hook-image
@@ -43,6 +50,7 @@ docker-hook-image:
           sleep 1;
         done
       - *init_signing_keys
+      - *install_valint
     script:
       - docker pull busybox:latest
       - valint bom busybox:latest
@@ -50,9 +58,9 @@ docker-hook-image:
         --product-version 1.0.1
         --context-type gitlab
         --format attest
-        --ca ${CA_CERT}
-        --cert ${SIGNERS_CERT}
-        --key ${SIGNERS_KEY}
+        --ca env://CA_CERT
+        --cert env://SIGNERS_CERT
+        --key env://SIGNERS_KEY
         -vv
       # - docker save -o busybox.tar busybox:latest
       # - valint bom docker-archive:busybox.tar
