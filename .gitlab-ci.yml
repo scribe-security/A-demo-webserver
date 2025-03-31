@@ -2,7 +2,7 @@ image: ubuntu:latest
 before_script:
   - apt update || apk update
   - apt install git curl -y || apk add git curl
-  # - curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/master/install.sh | sh -s -- -b /usr/local/bin
+  - curl -sSfL https://raw.githubusercontent.com/scribe-security/misc/master/install.sh | sh -s -- -b /usr/local/bin
   - export PATH=$PATH:/usr/bin:/etc/docker
 
 workflow:
@@ -26,7 +26,8 @@ docker-hook-image:
     image: docker:latest
     variables:
       DOCKER_DRIVER: overlay2
-      DOCKER_TLS_CERTDIR: "/certs"
+      DOCKER_TLS_CERTDIR: ""
+      DOCKER_HOST: tcp://docker:2375
     services:
       - docker:dind
     script:
