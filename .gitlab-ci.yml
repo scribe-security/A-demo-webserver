@@ -21,7 +21,7 @@ stages:
   #  - export ATTEST_CA=$(echo $ATTEST_CA_B64 | base64 -d | tr -d '\r' )
    - export SIGNERS_KEY=$(echo $ATTEST_KEY_B64 | base64 -d | tr -d '\r' )
    - export SIGNERS_CERT=$(echo $ATTEST_CERT_B64 | base64 -d | tr -d '\r' )
-   - export CA_CERT=$(echo $ATTEST_CA_B64 | base64 -d | tr -d '\r' )
+   - export CA_CERT=$(echo $CA_CERT_B64 | base64 -d | tr -d '\r' )
    - printenv
 
 docker-hook-image:
@@ -52,19 +52,15 @@ docker-hook-image:
       - *init_signing_keys
       - *install_valint
     script:
-      - docker pull busybox:latest
-      - valint bom busybox:latest
+      - valint verify busybox:latest
         --product-key das-scribe-poc-product
         --product-version 1.0.1
         --context-type gitlab
-        --format attest
+        --bom --provenance
         --ca env://CA_CERT
         --cert env://SIGNERS_CERT
         --key env://SIGNERS_KEY
-        -vv
-      # - docker save -o busybox.tar busybox:latest
-      # - valint bom docker-archive:busybox.tar
-      #     --context-type gitlab
-      #     --output-directory ./scribe/valint
-      #     --output-file ./busybox.json
-      #     -vv -f
+        --format attest
+        --rule slsa/l1-provenance-exists@v1
+        --rule slsa/l2-provenance-authenticated@v1
+        --verbose 2
