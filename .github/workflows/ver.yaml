@@ -43,7 +43,7 @@ jobs:
           uses: scribe-security/action-bom@master
           with:
              target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
-             product-key:  ${{ env.APP_NAME }}
+             product-key:  ${{ env.PRODUCT_NAME }}
              product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
              scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
              format: attest
@@ -55,7 +55,7 @@ jobs:
           uses: scribe-security/action-slsa@master
           with:
              target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
-             product-key:  ${{ env.APP_NAME }}
+             product-key:  ${{ env.PRODUCT_NAME }}
              product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
              scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
              format: attest
@@ -84,7 +84,7 @@ jobs:
         - name: Policy verify image signature
           uses: scribe-security/action-verify@master
           with:
-             #target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
+             target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
              product-key:  ${{ env.PRODUCT_NAME }}
              product-version: ${{env.PRODUCT_VERSION}} 
              scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
