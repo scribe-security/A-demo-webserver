@@ -12,43 +12,7 @@ on:
   
 
 jobs:
-  npm-experiment:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 17
-
-      - name: Install dependencies
-        run: npm install --save-exact
-
-      
-      - name: Generate signed SBOM for source code
-        uses: scribe-security/action-bom-cli@master
-        with:
-             target: 'git:.'
-             product-key:  ${{ env.PRODUCT_NAME }}
-             product-version: ${{env.PRODUCT_VERSION}} 
-             scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-             format: attest
-             key: env://ATTEST_KEY
-             cert: env://ATTEST_CERT
-             ca: env://ATTEST_CA
-             label: "Glass"
-             verbose: 2
-
-
+  
   build-docker-image:
       runs-on: ubuntu-latest
       permissions:
@@ -79,7 +43,6 @@ jobs:
           uses: scribe-security/action-bom@master
           with:
              target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
-          
              product-key:  ${{ env.APP_NAME }}
              product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
              scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
@@ -88,11 +51,22 @@ jobs:
              cert: env://ATTEST_CERT
              ca: env://ATTEST_CA
              verbose: 2
-          
+        - name: Generate signed SLSA Provenance for docker image
+          uses: scribe-security/action-slsa@master
+          with:
+             target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
+             product-key:  ${{ env.APP_NAME }}
+             product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+             scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+             format: attest
+             key: env://ATTEST_KEY
+             cert: env://ATTEST_CERT
+             ca: env://ATTEST_CA
+             verbose: 2
       
   policy-gate:
       name: pr-policy-gate
-      needs: [npm-experiment] 
+      needs: [build-docker-image] 
       runs-on: ubuntu-latest
       permissions:
         contents: read
@@ -102,19 +76,19 @@ jobs:
       steps:
         - name: Checkout code
           uses: actions/checkout@v4
-        - name: Policy verify before PR
+        - name: Policy verify image signature
           uses: scribe-security/action-verify@master
           with:
-             
+             target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
              product-key:  ${{ env.PRODUCT_NAME }}
              product-version: ${{env.PRODUCT_VERSION}} 
              scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
              format: attest
              label: "Glass-2"
-        #     key: env://ATTEST_KEY
              cert: env://ATTEST_CERT
              ca: env://ATTEST_CA
-             rule: api/scribe-api-cve@v1
+             
+             
         
        
 
