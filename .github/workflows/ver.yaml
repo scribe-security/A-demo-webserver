@@ -1,0 +1,78 @@
+name: BB-Signature verify
+
+env:
+  PRODUCT_VERSION: "v0.0.29"
+  PRODUCT_NAME: "NPM-Bad-Example-Code"
+  IMAGE_NAME: "no-good-vulnerable"
+  FS_NAME: fs-tracker-${{ github.run_id }}
+  FS_DIR: /tmp/fs-tracker-${{ github.run_id }}
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  # push:
+
+jobs:
+  npm-experiment:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17
+
+      - name: Install dependencies
+        run: npm install --save-exact
+      
+      - name: Generate signed SBOM for source code
+        uses: scribe-security/action-bom-cli@master
+        with:
+             target: 'git:.'
+             product-key:  ${{ env.PRODUCT_NAME }}
+             product-version: ${{env.PRODUCT_VERSION}} 
+             scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+             format: attest
+             key: env://SIGNER_KEY
+             cert: env://SIGNER_CERT
+             ca: env://COMPANY_CA
+             label: "Glass"
+             verbose: 2
+
+      
+  policy-gate:
+    name: pr-policy-gate
+    needs: [npm-experiment] 
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Policy verify before PR
+        uses: scribe-security/action-verify@master
+        with:
+           
+           product-key:  ${{ env.PRODUCT_NAME }}
+           product-version: ${{env.PRODUCT_VERSION}} 
+           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+           format: attest
+           label: "Glass-2"
+           rule: api/scribe-api-cve@v1
+        
+       
+
+      
