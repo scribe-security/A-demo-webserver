@@ -47,7 +47,7 @@ jobs:
       
   policy-gate:
     name: pr-policy-gate
-    needs: [python-experiment] 
+    needs: [npm-experiment] 
     runs-on: ubuntu-latest
     permissions:
       contents: read
