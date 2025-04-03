@@ -2,7 +2,7 @@ name: BB-Pull request gate
 
 env:
   PRODUCT_VERSION: "v0.0.29"
-  PRODUCT_NAME: "Bad-Example-Code"
+  PRODUCT_NAME: "NPM-Bad-Example-Code"
   IMAGE_NAME: "no-good-vulnerable"
   FS_NAME: fs-tracker-${{ github.run_id }}
   FS_DIR: /tmp/fs-tracker-${{ github.run_id }}
