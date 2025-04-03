@@ -44,9 +44,9 @@ jobs:
              product-version: ${{env.PRODUCT_VERSION}} 
              scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
              format: attest
-             key: env://SIGNER_KEY
-             cert: env://SIGNER_CERT
-             ca: env://COMPANY_CA
+             key: env://ATTEST_KEY
+             cert: env://ATTEST_CERT
+             ca: env://ATTEST_CA
              label: "Glass"
              verbose: 2
 
@@ -86,9 +86,9 @@ jobs:
              product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
              scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
              format: attest
-             key: env://SIGNER_KEY
-             cert: env://SIGNER_CERT
-             ca: env://COMPANY_CA
+             key: env://ATTEST_KEY
+             cert: env://ATTEST_CERT
+             ca: env://ATTEST_CA
              verbose: 2
           
       
