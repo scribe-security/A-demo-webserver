@@ -1,0 +1,67 @@
+name: BB-Pull request gate
+
+env:
+  PRODUCT_VERSION: "v0.0.29"
+  PRODUCT_NAME: "Bad-Example-Code"
+  IMAGE_NAME: "no-good-vulnerable"
+  FS_NAME: fs-tracker-${{ github.run_id }}
+  FS_DIR: /tmp/fs-tracker-${{ github.run_id }}
+
+on:
+  workflow_dispatch:
+  # push:
+
+jobs:
+  python-experiment:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2      
+
+      - name: Install python dependencies
+        run: | 
+          pip3 install -r requirements.txt
+      
+      - name: Generate signed SBOM for source code
+        uses: scribe-security/action-bom-cli@master
+        with:
+             target: 'git:.'
+             product-key:  ${{ env.PRODUCT_NAME }}
+             product-version: ${{env.PRODUCT_VERSION}} 
+             scribe-client-secret: ${{ secrets.SCRIBE_TOKEN }}
+             format: attest
+             label: "Glass"
+             verbose: 2
+
+      
+  policy-gate:
+    name: pr-policy-gate
+    needs: [python-experiment] 
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Policy verify before PR
+        uses: scribe-security/action-verify@master
+        with:
+           
+           product-key:  ${{ env.PRODUCT_NAME }}
+           product-version: ${{env.PRODUCT_VERSION}} 
+           scribe-client-secret: ${{ secrets.SCRIBE_TOKEN }}
+           format: attest
+           label: "Glass-2"
+           # rule: policies/v1/sarif/semgrep 
+        
+       
+
+      
