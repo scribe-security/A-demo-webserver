@@ -39,7 +39,7 @@ jobs:
              target: 'git:.'
              product-key:  ${{ env.PRODUCT_NAME }}
              product-version: ${{env.PRODUCT_VERSION}} 
-             scribe-client-secret: ${{ secrets.SCRIBE_TOKEN }}
+             scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
              format: attest
              label: "Glass"
              verbose: 2
@@ -63,7 +63,7 @@ jobs:
            
            product-key:  ${{ env.PRODUCT_NAME }}
            product-version: ${{env.PRODUCT_VERSION}} 
-           scribe-client-secret: ${{ secrets.SCRIBE_TOKEN }}
+           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
            format: attest
            label: "Glass-2"
            # rule: policies/v1/sarif/semgrep 
