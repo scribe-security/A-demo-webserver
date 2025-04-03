@@ -113,6 +113,9 @@ policy-gate:
            scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
            format: attest
            label: "Glass-2"
+           key: env://ATTEST_KEY
+           cert: env://ATTEST_CERT
+           ca: env://ATTEST_CA
            rule: api/scribe-api-cve@v1
         
        
