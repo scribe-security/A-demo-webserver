@@ -6,6 +6,7 @@ env:
   IMAGE_NAME: "no-good-vulnerable"
   FS_NAME: fs-tracker-${{ github.run_id }}
   FS_DIR: /tmp/fs-tracker-${{ github.run_id }}
+  SCRIBE_TOKEN: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }} 
 
 on:
   workflow_dispatch:
