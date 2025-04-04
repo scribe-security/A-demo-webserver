@@ -3,7 +3,7 @@
 # Make the POST request and extract the token
 json_a=$(jq -n --arg scribe_token "$SCRIBE_TOKEN" \
 '{
-    "api_token": "$scribe_token",
+    "api_token": $scribe_token,
     "client_id": "string",
     "client_secret": "string"
   }')
