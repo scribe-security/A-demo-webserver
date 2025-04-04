@@ -69,6 +69,9 @@ jobs:
            format: attest
            label: "Glass-2"
            rule: api/scribe-api-cve@v1
+      - name: Show Scribe link
+        run: getlink.sh
+        
         
        
 
