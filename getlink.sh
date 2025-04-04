@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Make the POST request and extract the token
+echo "Scribe1: $SCRIBE_TOKEN"
 TOKEN=$(curl -s -X POST \
   'https://api.scribesecurity.com/v1/login' \
   -H 'accept: application/json' \
