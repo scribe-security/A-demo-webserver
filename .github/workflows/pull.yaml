@@ -59,6 +59,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Show Scribe link
+        run: getlink.sh
       - name: Policy verify before PR
         uses: scribe-security/action-verify@master
         with:
@@ -69,8 +71,7 @@ jobs:
            format: attest
            label: "Glass-2"
            rule: api/scribe-api-cve@v1
-      - name: Show Scribe link
-        run: getlink.sh
+      
         
         
        
