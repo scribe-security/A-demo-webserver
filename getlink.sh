@@ -69,6 +69,7 @@ curl -s -X POST \
 -H "Authorization: Bearer $TOKEN" \
 -H 'accept: */*' \
 -H 'Content-Type: application/json' \
--d "$json_body"|jq -r '.result[0].data[].deeplink'
+-d "$json_body"
+#|jq -r '.result[0].data[].deeplink'
 
 
