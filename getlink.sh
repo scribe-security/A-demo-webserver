@@ -6,7 +6,7 @@ TOKEN=$(curl -s -X POST \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-    "api_token": "c2NyaWJlLWh1Yi10ZWFtMjg5LWw5WGM1Wk9uV1VqeGxQMnppdkczUDRuYWVuQlM1bzJJOnp3QTg1cHltQ0VXVVgxdlhBUG94OFJ4WmRkRVBncEVyVmllQ1I5OHRoa0FnRGs4amdrZ1FVOUdCdVFkZA==",
+    "api_token": $secrets.SCRIBE_DEV_M2M_CLIENT_SECRET,
     "client_id": "string",
     "client_secret": "string"
   }' | jq -r '.token')
