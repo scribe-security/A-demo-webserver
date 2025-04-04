@@ -2,15 +2,17 @@
 
 # Make the POST request and extract the token
 echo "Scribe1: $SCRIBE_TOKEN"
+json_a=$(jq -n --arg scribe_token "$SCRIBE_TOKEN" \
+'{
+    "api_token": "$scribe_token",
+    "client_id": "string",
+    "client_secret": "string"
+  }')
 TOKEN=$(curl -s -X POST \
   'https://api.scribesecurity.com/v1/login' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
-  -d '{
-    "api_token": "$SCRIBE_TOKEN",
-    "client_id": "string",
-    "client_secret": "string"
-  }' | jq -r '.token')
+  -d  "$json_a"| jq -r '.token')
 
 # Optional: print the token (for debugging)
 echo "TOKEN: $TOKEN"
