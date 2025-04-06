@@ -24,7 +24,7 @@ access_token=$(curl -s -X GET \
 -H 'Content-Type: application/json'|jq -r '.access_token')
 echo "access_token: $access_token"
 echo "(1)-----------------------------------------"
-json_body=$(jq -n --arg superset_token "$access_token" \
+json_body=$(jq -n --arg superset_token "$access_token" --arg current_run_id "$CURRENT_RUN_ID" \
 '{
     "superset_token": $superset_token,
     "validate": false, 
@@ -48,7 +48,7 @@ json_body=$(jq -n --arg superset_token "$access_token" \
                 {
                     "col": "run_id",
                     "op": "==",
-                    "val": "14239124682"
+                    "val": $current_run_id
                     }
                 ],
                 "metrics": [],
