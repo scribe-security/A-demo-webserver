@@ -27,6 +27,7 @@ echo "(1)-----------------------------------------"
 json_body=$(jq -n --arg superset_token "$access_token" \
 '{
     "superset_token": $superset_token,
+    "validate": false, 
     "query": {
         "datasource": {
             "id": 3122,
