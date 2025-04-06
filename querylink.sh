@@ -70,4 +70,4 @@ curl -s -X POST \
 -H "Authorization: Bearer $TOKEN" \
 -H 'accept: */*' \
 -H 'Content-Type: application/json' \
--d "$json_body"|jq -r '.result[].data[]|"https://app.scribesecurity.com\.deeplink)"'
+-d "$json_body"|jq -r '.result[].data[]|"https://app.scribesecurity.com\(.deeplink)"'
