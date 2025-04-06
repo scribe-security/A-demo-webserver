@@ -73,7 +73,7 @@ jobs:
            rule: api/scribe-api-cve@v1
         continue-on-error: true
       - name: Show Scribe link
-        run: source ./getlink.sh
+        run: source ./querylink.sh
       
         
         
