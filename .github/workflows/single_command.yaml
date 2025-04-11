@@ -67,7 +67,8 @@ jobs:
            provenance: TRUE
            format: attest
            label: "Flamingo"
-           rule: slsa/l1-provenance-exists@v1, slsa/l2-provenance-authenticated@v1
+           rule: slsa/l1-provenance-exists@v1
+           rule+1: slsa/l2-provenance-authenticated@v1
 
 
 
