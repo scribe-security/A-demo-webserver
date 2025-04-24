@@ -1,0 +1,21 @@
+name: Trigger SSDF Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+
+  evaluate_ssdf:  
+    name: Evaluate SSDF
+    uses: scribe-public/reusable-workflows/.github/workflows/ssdf.yaml@main
+    with:
+        scribe_product_name: "Sky-Mapper"
+        scribe_product_version: "v0.0.31"
+        target: "scribesecurity/python-prng:1.1.16"
+        policy_branch: "sh-5883-ssdf"
+    secrets:
+        SCRIBE_TOKEN: ${{ secrets.SCRIBE_TOKEN }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
