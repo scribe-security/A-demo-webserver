@@ -13,7 +13,7 @@ jobs:
         scribe_product_name: "Sky-Mapper"
         scribe_product_version: "1.0.8"
         target: "scribesecurity/python-prng:1.1.16"
-        policy_branch: "sh-5883-ssdf"
+        # policy_branch: "sh-5883-ssdf"
     secrets:
         SCRIBE_TOKEN: ${{ secrets.SCRIBE_TOKEN }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
