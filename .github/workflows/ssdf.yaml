@@ -11,7 +11,7 @@ jobs:
     uses: scribe-public/reusable-workflows/.github/workflows/ssdf.yaml@main
     with:
         scribe_product_name: "Sky-Mapper"
-        scribe_product_version: "v0.0.31"
+        scribe_product_version: "1.0.8"
         target: "scribesecurity/python-prng:1.1.16"
         policy_branch: "sh-5883-ssdf"
     secrets:
