@@ -1,0 +1,221 @@
+{
+    "version": "2.1.0",
+    "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+    "runs": [
+       {
+          "tool": {
+             "driver": {
+                "informationUri": "https://scribesecurity.com",
+                "name": "valint",
+                "rules": [
+                   {
+                      "id": "default-any-artifact",
+                      "name": "Default Any Artifact",
+                      "shortDescription": {
+                         "text": "default.default-any-artifact. passed on evidence verification"
+                      },
+                      "fullDescription": {
+                         "text": "The Verify Artifact rule enforces a set of requirements on who produced artifacts across your supply chain but also what information should be collected on each artifact. \nIn other words, it ensures produced artifacts (targets) integrity by checking the expected evidence, signatures and origin in your supply chain."
+                      },
+                      "defaultConfiguration": {
+                         "level": "error"
+                      },
+                      "help": {
+                         "text": "default.default-any-artifact. passed on evidence verification",
+                         "markdown": "## rule details\n\u003e **Signed evidence:** no\n\u003e **Identity:** Identity check skipped for unsigned evidence\n\u003e **Format:** \n\n\n### **Match criteria**\n```yaml\ntarget_type: container\nsbomversion: sha256:517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403\n```\n\n\n### **Policy arguments**\n```yaml\nidentity:\n    common-names: []\n    emails:\n        - test\n    uris: []\n```\n\n\n### **Verified Evidence**\n```yaml\nhostname: mikey-thinkpad\nuser: mikey\nlabels:\n    - test test2\ntimestamp: \"2024-11-26T15:12:18+02:00\"\ninput_scheme: docker\ninput_name: busybox\ninput_tag: latest\ncontent_type: cyclonedx-json\ncontent_body_type: cyclonedx-json\ncontext_type: local\ntool: valint\ntool_version: 0.0.0\ntool_vendor: Scribe Security\nformat_type: cyclonedx\nformat_version: \"1.5\"\nformat_encoding: json\ngit_url: https://github.com/scribe-security/valint.git\ngit_branch: bug_fix_short_format_name\ngit_commit: c1bddbd0673e848e82409282b153e1c00cdd73c3\ngit_ref: refs/heads/bug_fix_short_format_name\nimageID: sha256:517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403\nrepoDigest:\n    - busybox@sha256:db142d433cdde11f10ae479dbf92f3b13d693fd1c91053da9979728cceb1dc68\ntag:\n    - latest\n    - latest\nsize: 4269678\nplatform: linux/amd64\ncreated: \"2024-09-26T21:31:42Z\"\ntarget_type: container\nsbomtype: container\nsbomgroup: container\nsbomname: index.docker.io/library/busybox:latest\nsbomversion: sha256:517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403\nsbomhashs:\n    - sha256-db142d433cdde11f10ae479dbf92f3b13d693fd1c91053da9979728cceb1dc68\n    - sha256-517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403\nsbompurl: pkg:docker/index.docker.io/library/busybox:latest@sha256:517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403?arch=amd64\nref: /home/mikey/.cache/valint/sha256-517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403.bom.json\nstore: cache\n```\n"
+                      },
+                      "properties": {
+                         "initiatives": null,
+                         "labels": null,
+                         "policy-name": "default",
+                         "rule-type": "verify-artifact",
+                         "tags": [
+                            "scribe",
+                            "policy",
+                            "cyclonedx-json",
+                            "local",
+                            "container",
+                            "busybox",
+                            "latest",
+                            "sha256:517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403"
+                         ]
+                      }
+                   }
+                ],
+                "semanticVersion": "0.0.0",
+                "version": "0.0.0"
+             }
+          },
+          "invocations": [
+             {
+                "commandLine": "valint verify busybox:latest --email=[test] --payload=valint.sarif.json --verbose=4",
+                "executionSuccessful": true,
+                "exitCode": 0,
+                "exitCodeDescription": "valint exited with 0, policy evaluation result is: passed"
+             }
+          ],
+          "results": [
+             {
+                "properties": {
+                   "verify-artifact.default-any-artifact": [
+                      {
+                         "content_body_type": "cyclonedx-json",
+                         "content_type": "cyclonedx-json",
+                         "context_type": "local",
+                         "created": "2024-09-26T21:31:42Z",
+                         "format_encoding": "json",
+                         "format_type": "cyclonedx",
+                         "format_version": "1.5",
+                         "git_branch": "bug_fix_short_format_name",
+                         "git_commit": "c1bddbd0673e848e82409282b153e1c00cdd73c3",
+                         "git_ref": "refs/heads/bug_fix_short_format_name",
+                         "git_url": "https://github.com/scribe-security/valint.git",
+                         "hostname": "mikey-thinkpad",
+                         "imageID": "sha256:517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403",
+                         "input_name": "busybox",
+                         "input_scheme": "docker",
+                         "input_tag": "latest",
+                         "labels": [
+                            "test test2"
+                         ],
+                         "platform": "linux/amd64",
+                         "ref": "/home/mikey/.cache/valint/sha256-517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403.bom.json",
+                         "repoDigest": [
+                            "busybox@sha256:db142d433cdde11f10ae479dbf92f3b13d693fd1c91053da9979728cceb1dc68"
+                         ],
+                         "sbomgroup": "container",
+                         "sbomhashs": [
+                            "sha256-db142d433cdde11f10ae479dbf92f3b13d693fd1c91053da9979728cceb1dc68",
+                            "sha256-517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403"
+                         ],
+                         "sbomname": "index.docker.io/library/busybox:latest",
+                         "sbompurl": "pkg:docker/index.docker.io/library/busybox:latest@sha256:517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403?arch=amd64",
+                         "sbomtype": "container",
+                         "sbomversion": "sha256:517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403",
+                         "size": 4269678,
+                         "store": "cache",
+                         "tag": [
+                            "latest",
+                            "latest"
+                         ],
+                         "target_type": "container",
+                         "timestamp": "2024-11-26T15:12:18+02:00",
+                         "tool": "valint",
+                         "tool_vendor": "Scribe Security",
+                         "tool_version": "0.0.0",
+                         "user": "mikey"
+                      }
+                   ]
+                },
+                "ruleId": "default-any-artifact",
+                "ruleIndex": 0,
+                "kind": "pass",
+                "level": "note",
+                "message": {
+                   "text": "1/1 evidence verified",
+                   "markdown": "1/1 evidence verified"
+                },
+                "locations": [
+                   {
+                      "physicalLocation": {
+                         "artifactLocation": {
+                            "uri": "index.docker.io/library/busybox?version=sha256:517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403\u0026tag=latest"
+                         },
+                         "region": {
+                            "startLine": 1
+                         }
+                      },
+                      "message": {
+                         "text": "URL"
+                      }
+                   },
+                   {
+                      "physicalLocation": {
+                         "artifactLocation": {
+                            "uri": "busybox"
+                         },
+                         "region": {
+                            "startLine": 1
+                         }
+                      },
+                      "message": {
+                         "text": "NAME"
+                      }
+                   },
+                   {
+                      "physicalLocation": {
+                         "artifactLocation": {
+                            "uri": "%2Fhome%2Fmikey%2F.cache%2Fvalint%2Fsha256-517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403.bom.json"
+                         },
+                         "region": {
+                            "startLine": 1
+                         }
+                      },
+                      "message": {
+                         "text": "REF"
+                      }
+                   }
+                ]
+             }
+          ],
+          "automationDetails": {
+             "id": "valint/1732706993"
+          },
+          "properties": {
+             "verifier-context": {
+                "hostname": "mikey-thinkpad",
+                "user": "mikey",
+                "timestamp": "2024-11-27T13:29:52+02:00",
+                "input_name": "busybox",
+                "input_tag": "latest",
+                "content_type": "statement-sarif",
+                "content_body_type": "sarif",
+                "context_type": "local",
+                "predicate_type": "http://docs.oasis-open.org/sarif/sarif/2.1.0",
+                "tool": "valint",
+                "tool_version": "0.0.0",
+                "format_type": "sarif",
+                "format_version": "2.1.0",
+                "format_encoding": "json",
+                "git_url": "https://github.com/scribe-security/valint.git",
+                "git_branch": "fix_github_sarif",
+                "git_commit": "0e7de7897b078eb85bc7fc4c73a2e2788723d3d5",
+                "git_ref": "refs/heads/fix_github_sarif",
+                "imageID": "sha256:517b897a6a8312ce202a85c8a517d820b0fc5b6f5d14ec2a3267906f75680403",
+                "repoDigest": [
+                   "busybox@sha256:db142d433cdde11f10ae479dbf92f3b13d693fd1c91053da9979728cceb1dc68"
+                ],
+                "tag": [
+                   "latest",
+                   "latest"
+                ],
+                "size": 4269678,
+                "platform": "linux/amd64",
+                "created": "2024-09-26T21:31:42Z",
+                "file_id": "sha256:7743ce65ce4187cae9222549160b26020ea0966b915a6db6164f669daa0817fe",
+                "file_path": "index.docker.io/library/busybox:latest",
+                "target_type": "policy-results",
+                "sbomtype": "container",
+                "sbomgroup": "data",
+                "sbomname": "index.docker.io/library/busybox:latest",
+                "sbomversion": "sha256:7743ce65ce4187cae9222549160b26020ea0966b915a6db6164f669daa0817fe",
+                "sbomhashs": [
+                   "sha256-7743ce65ce4187cae9222549160b26020ea0966b915a6db6164f669daa0817fe"
+                ],
+                "sbompurl": "pkg:data/index.docker.io/library/busybox:latest@sha256:7743ce65ce4187cae9222549160b26020ea0966b915a6db6164f669daa0817fe",
+                "policies": [
+                   "default"
+                ],
+                "rules": [
+                   "default-any-artifact"
+                ],
+                "allow": true,
+                "policy-scripts": {
+                   "": ""
+                },
+                "bundle_info": {}
+             }
+          }
+       }
+    ]
+ }
