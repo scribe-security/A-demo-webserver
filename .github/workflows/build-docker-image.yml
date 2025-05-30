@@ -144,10 +144,10 @@ jobs:
            scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
            format: attest
            config: .valint.yaml
-           rule: slsa/l2-provenance-authenticated@v1
+           initiative: slsa.l2@v2
            verbose: 2
-      - name: verify slsa1
-        id: slsa_ver1
+      - name: verify Blueprint
+        id: blue1
         uses: scribe-security/action-verify@master
         with:
            target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
@@ -157,9 +157,10 @@ jobs:
            scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
            format: attest
            config: .valint.yaml
+           initiative: sspb-gh@v2
            verbose: 2
-           rule: slsa/l1-provenance-exists@v1
-           # bundle-branch: main
+     
+        
      
            
 
