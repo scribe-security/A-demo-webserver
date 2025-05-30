@@ -153,7 +153,7 @@ jobs:
  #         verbose: 2
 
   provenance-deploy:
-  #  needs: enforce
+    needs: attest-image
     runs-on: ubuntu-latest
     permissions:
       contents: read
