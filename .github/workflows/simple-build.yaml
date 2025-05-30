@@ -129,36 +129,36 @@ jobs:
       - name: integration-test
         run: sleep 30
         shell: bash          
-  enforce:
-    needs: 
-    - tests
-    - attest-image
-    - checkout-attest
-    
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-           fetch-depth: 0
-      - name: Verify critial vulns
-        uses: scribe-security/action-verify@master
-        with:
-          scribe-enable: true
-          product-key:  ${{ env.APP_NAME }}
-          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-          config: .valint.yaml
-          rule: critical-vulns-rule.yaml
-          skip-bundle: false
-          format: attest
-          verbose: 2
+ # enforce:
+ #   needs: 
+ #   - tests
+ #   - attest-image
+ #   - checkout-attest
+ #   
+ #   runs-on: ubuntu-latest
+ #   permissions:
+ #     contents: read
+ #     id-token: write
+ #   steps:
+ #     - name: Checkout repository
+ #       uses: actions/checkout@v3
+ #       with:
+ #          fetch-depth: 0
+ #     - name: Verify critial vulns
+ #       uses: scribe-security/action-verify@master
+ #       with:
+ #         scribe-enable: true
+ #         product-key:  ${{ env.APP_NAME }}
+ #         product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+ #         scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+ #         config: .valint.yaml
+ #         rule: critical-vulns-rule.yaml
+ #         skip-bundle: false
+ #         format: attest
+ #         verbose: 2
 
   provenance-deploy:
-    needs: enforce
+  #  needs: enforce
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -180,7 +180,32 @@ jobs:
            scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
            format: attest
            config: .valint.yaml
+      - name: Generate signed SBOM and provenance for docker image
+        uses: scribe-security/action-verify@master
+        with:
+             target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
+             bom: true
+             provenance: true
+             product-key:  ${{ env.APP_NAME }}
+             product-version: ${{env.PRODUCT_VERSION}} 
+             scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+             format: attest
+             label: "Glass"
+             initiative: slsa.l2@v2
 
+      - name: verify blueprint
+        id: blue-1
+        uses: scribe-security/action-verify@master
+        with:
+           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
+           product-key:  ${{ env.APP_NAME }}
+           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+           format: attest
+           config: .valint.yaml
+           initiative: sspb-gh@v2
+           verbose: 2
+           label: "Blueprint"
 
       - uses: actions/upload-artifact@v2
         with:
