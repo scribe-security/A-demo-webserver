@@ -86,12 +86,7 @@ jobs:
             verbose: 2
             deliverable: true
            
-      
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: evidence
-          path: scribe/valint/*.json*
+            
   
   attest-image:
     needs: 
@@ -207,10 +202,6 @@ jobs:
            verbose: 2
            label: "Blueprint"
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: provenance
-          path: ${{ steps.slsa_provenance.outputs.OUTPUT_PATH }} 
            
            
 
