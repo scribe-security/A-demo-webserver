@@ -71,7 +71,8 @@ jobs:
         uses: scribe-security/action-slsa@master
         continue-on-error: true
         with:
-          target: 'dir:.'
+          target: 'git:.'
+          depth: 1
           # attest-default: x509-env
           product-key: ${{ github.repository }}
           product-version: ${{ github.event.inputs.version || format('1.1.{0}', github.run_number) || env.version }}
@@ -87,13 +88,13 @@ jobs:
         id: check_stage
         uses: scribe-security/action-verify@master
         with:
-          target: 'dir:.'
+          target: 'git:.'
           scribe-enable: true
           product-key: ${{ github.repository }}
           product-version: ${{ github.event.inputs.version || format('1.1.{0}', github.run_number) || env.version }}
           format: attest
           # attest-default: x509-env
           verbose: 2
-          bundle: https://github.com/mmctech/mmc-tech-unified-scribe-policies
-          rule: slsa/verify-external-parameters@v2
+          # bundle: https://github.com/mmctech/mmc-tech-unified-scribe-policies
+          # rule: slsa/verify-external-parameters@v2
           label: "stage"
