@@ -61,4 +61,39 @@ jobs:
           external: "stage=SecOps-Scribe-${{ inputs.app_name }}"
           # initiative: slsa.l2@v2
 
- 
+      - name: Create SLSA provenance for Build
+        env:
+          # ATTEST_KEY: ${{ secrets.************* }}
+          # ATTEST_CERT: ${{ secrets.******** }}
+          # ATTEST_CA: ${{ vars.SCRIBE_MMC_CA }}
+          VERSION: ${{ github.event.inputs.version || format('1.1.{0}', github.run_number) || env.version }}
+        id: slsa_provenance_build
+        uses: scribe-security/action-slsa@master
+        continue-on-error: true
+        with:
+          target: 'dir:.'
+          # attest-default: x509-env
+          product-key: ${{ github.repository }}
+          product-version: ${{ github.event.inputs.version || format('1.1.{0}', github.run_number) || env.version }}
+          format: attest
+          external: "stage=build"
+
+      - name: verify attestation
+        env:
+          # ATTEST_KEY: ${{ secrets.****** }}
+          # ATTEST_CERT: ${{ secrets.********* }}
+          # ATTEST_CA: ${{ vars.SCRIBE_MMC_CA }}
+          VERSION: ${{ github.event.inputs.version || format('1.1.{0}', github.run_number) || env.version }}
+        id: check_stage
+        uses: scribe-security/action-verify@master
+        with:
+          target: 'dir:.'
+          scribe-enable: true
+          product-key: ${{ github.repository }}
+          product-version: ${{ github.event.inputs.version || format('1.1.{0}', github.run_number) || env.version }}
+          format: attest
+          # attest-default: x509-env
+          verbose: 2
+          bundle: https://github.com/mmctech/mmc-tech-unified-scribe-policies
+          rule: slsa/verify-external-parameters@v2
+          label: "stage"
