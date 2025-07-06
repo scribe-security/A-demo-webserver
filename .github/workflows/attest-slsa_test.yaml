@@ -18,6 +18,7 @@ env:
   
 on:
   workflow_dispatch:
+  push:
 #  pull_request:
 #  push:
 #    branches: [main]
@@ -50,7 +51,7 @@ jobs:
         uses: scribe-security/action-slsa@master
         continue-on-error: true
         with:
-          target: ${{ inputs.REGISTRY }}/${{ inputs.IMAGE }}:${{ inputs.IMAGE_TAG }}
+          target: busybox:latest
           bom: true
           provenance: true
           # attest-default: x509-env
