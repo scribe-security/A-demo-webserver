@@ -13,15 +13,14 @@ env:
   VALINT_BOM_SUPPLIER_PHONE: 001-001-0011
   INTEGRATION_TEST: 15s
   GITHUB_RUN_NUM: ${{ github.run_number }}
-  
-  
+
 on:
   workflow_dispatch:
 #  pull_request:
 #  push:
 #    branches: [main]
 
-concurrency: 
+concurrency:
   group: build-in-${{ github.ref }}
   cancel-in-progress: true
 
@@ -36,7 +35,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-  
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -62,7 +61,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -70,28 +69,25 @@ jobs:
 
       - name: Install dependencies
         run: npm install --save-exact
-   
-           
+
       - name: Generate signed SBOM for repo content clone
         uses: scribe-security/action-bom@master
         with:
-            target: 'git:.'
-            scribe-enable: true
-            product-key: ${{ env.APP_NAME }}
-            product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-            scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-            components: commits,packages,files,dep
-            format: attest
-            config: .valint.yaml
-            verbose: 2
-            deliverable: true
-           
-            
-  
+          target: "git:."
+          scribe-enable: true
+          product-key: ${{ env.APP_NAME }}
+          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          components: commits,packages,files,dep
+          format: attest
+          config: .valint.yaml
+          verbose: 2
+          deliverable: true
+
   attest-image:
-    needs: 
-    - build-docker-image
-    - checkout-attest
+    needs:
+      - build-docker-image
+      - checkout-attest
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -100,22 +96,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-           fetch-depth: 0
+          fetch-depth: 0
       - name: Generate signed SBOM for docker image
         uses: scribe-security/action-bom@master
         with:
-           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
-           scribe-enable: true
-           product-key:  ${{ env.APP_NAME }}
-           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
-           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-           format: attest
-           config: .valint.yaml
-           label: "Flamingo"
+          target: "${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}"
+          scribe-enable: true
+          product-key: ${{ env.APP_NAME }}
+          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+          # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          format: attest
+          config: .valint.yaml
+          label: "Flamingo"
   tests:
-    needs: 
-    - build-docker-image
+    needs:
+      - build-docker-image
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -123,34 +119,34 @@ jobs:
     steps:
       - name: integration-test
         run: sleep 30
-        shell: bash          
- # enforce:
- #   needs: 
- #   - tests
- #   - attest-image
- #   - checkout-attest
- #   
- #   runs-on: ubuntu-latest
- #   permissions:
- #     contents: read
- #     id-token: write
- #   steps:
- #     - name: Checkout repository
- #       uses: actions/checkout@v3
- #       with:
- #          fetch-depth: 0
- #     - name: Verify critial vulns
- #       uses: scribe-security/action-verify@master
- #       with:
- #         scribe-enable: true
- #         product-key:  ${{ env.APP_NAME }}
- #         product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
- #         scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
- #         config: .valint.yaml
- #         rule: critical-vulns-rule.yaml
- #         skip-bundle: false
- #         format: attest
- #         verbose: 2
+        shell: bash
+  # enforce:
+  #   needs:
+  #   - tests
+  #   - attest-image
+  #   - checkout-attest
+  #
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     id-token: write
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #          fetch-depth: 0
+  #     - name: Verify critial vulns
+  #       uses: scribe-security/action-verify@master
+  #       with:
+  #         scribe-enable: true
+  #         product-key:  ${{ env.APP_NAME }}
+  #         product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+  #         scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+  #         config: .valint.yaml
+  #         rule: critical-vulns-rule.yaml
+  #         skip-bundle: false
+  #         format: attest
+  #         verbose: 2
 
   provenance-deploy:
     needs: attest-image
@@ -162,54 +158,48 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-           fetch-depth: 0
+          fetch-depth: 0
       - name: create slsa provenance
         id: slsa_provenance
         uses: scribe-security/action-slsa@master
         with:
-           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
-           scribe-enable: true
-           product-key:  ${{ env.APP_NAME }}
-           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-           # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
-           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-           format: attest
-           config: .valint.yaml
+          target: "${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}"
+          scribe-enable: true
+          product-key: ${{ env.APP_NAME }}
+          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+          # scribe-client-id: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_ID }}
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          format: attest
+          config: .valint.yaml
       - name: Generate signed SBOM and provenance for docker image
         uses: scribe-security/action-verify@master
         with:
-             target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
-             bom: true
-             provenance: true
-             product-key:  ${{ env.APP_NAME }}
-             product-version: ${{env.PRODUCT_VERSION}} 
-             scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-             format: attest
-             label: "Glass"
-             initiative: slsa.l2@v2
-             bundle: https://github.com/scribe-security/sample-policies-fork.git
-             bundle-branch: main
-             bundle-auth: ${{ secrets.READ_PRIVATE_GO_REPOS }}
+          target: "${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}"
+          bom: true
+          provenance: true
+          product-key: ${{ env.APP_NAME }}
+          product-version: ${{env.PRODUCT_VERSION}}
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          format: attest
+          label: "Glass"
+          initiative: slsa.l2@v2
+          bundle: https://github.com/scribe-security/sample-policies-fork.git
+          bundle-branch: main
+          bundle-auth: ${{ secrets.READ_PRIVATE_GO_REPOS }}
 
       - name: verify blueprint
         id: blue-1
         uses: scribe-security/action-verify@master
         with:
-           target: '${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}'
-           product-key:  ${{ env.APP_NAME }}
-           product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
-           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-           format: attest
-           config: .valint.yaml
-           initiative: sspb-gh@v2
-           bundle: https://github.com/scribe-security/sample-policies-fork.git
-           bundle-branch: main
-           bundle-auth: ${{ secrets.READ_PRIVATE_GO_REPOS }}
-           verbose: 2
-           label: "Blueprint"
-
-           
-           
-
-
- 
+          target: "${{ secrets.DOCKER_USERNAME }}/${{env.IMAGE_NAME}}:1.1.${{env.GITHUB_RUN_NUM}}"
+          product-key: ${{ env.APP_NAME }}
+          product-version: ${{env.PRODUCT_VERSION}} #${{env.GITHUB_RUN_NUM}}
+          scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+          format: attest
+          config: .valint.yaml
+          initiative: sspb-gh@v2
+          bundle: https://github.com/scribe-security/sample-policies-fork.git
+          bundle-branch: main
+          bundle-auth: ${{ secrets.READ_PRIVATE_GO_REPOS }}
+          verbose: 2
+          label: "Blueprint"
