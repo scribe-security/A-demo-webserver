@@ -1,0 +1,9 @@
+config-type: initiative
+id: my-fresh-sbom
+name: Verify Fresh SBOM (local rule)
+
+controls:
+  - id: verify-fresh-sbom
+    name: Verify Fresh SBOM
+    rules:
+      - uses: sbom/fresh-sbom@v2
