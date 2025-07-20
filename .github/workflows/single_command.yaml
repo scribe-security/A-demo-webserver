@@ -22,6 +22,17 @@ jobs:
     name: Build Webserver-Image
     runs-on: ubuntu-latest
     steps:
+      - name: Verify Source Code (no checkout)
+        uses: scribe-security/action-verify@master
+        with:
+           target: git:.
+           product-key:  ${{ env.SCRIBE_PRODUCT_NAME }}
+           product-version: ${{env.SCRIBE_PRODUCT_VERSION}}   
+           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+           format: attest
+           label: "Flamingo-source-test"
+           initiative: verify-fresh-sbom.yaml
+
       - name: Checkout
         uses: actions/checkout@v4
         
