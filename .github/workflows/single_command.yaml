@@ -57,21 +57,18 @@ jobs:
           echo "###########################################"
 
       - name: List local files (action)
-        id: pl
         uses: Rishabh510/Path-lister-action@master
         with:
           path: "."
           type: ".yaml"
 
       - name: List GITHUB_WORKSPACE files (action)
-        id: pl
         uses: Rishabh510/Path-lister-action@master
         with:
           path: $GITHUB_WORKSPACE
           type: ".yaml"
 
       - name: List github.workspace files (action)
-        id: pl
         uses: Rishabh510/Path-lister-action@master
         with:
           path: ${{ github.workspace }}
