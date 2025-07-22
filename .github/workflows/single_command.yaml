@@ -22,19 +22,39 @@ jobs:
     name: Build Webserver-Image
     runs-on: ubuntu-latest
     steps:
-      - name: Verify Source Code (no checkout)
-        uses: scribe-security/action-verify@master
-        with:
-           product-key:  ${{ env.SCRIBE_PRODUCT_NAME }}
-           product-version: ${{env.SCRIBE_PRODUCT_VERSION}}   
-           scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
-           format: attest
-           label: "Flamingo-source-test"
-           all-evidence: true
-           initiative: verify-fresh-sbom.yaml
+      # - name: Verify Source Code (no checkout)
+      #   uses: scribe-security/action-verify@master
+      #   with:
+      #      product-key:  ${{ env.SCRIBE_PRODUCT_NAME }}
+      #      product-version: ${{env.SCRIBE_PRODUCT_VERSION}}
+      #      scribe-client-secret: ${{ secrets.SCRIBE_DEV_M2M_CLIENT_SECRET }}
+      #      format: attest
+      #      label: "Flamingo-source-test"
+      #      all-evidence: true
+      #      initiative: verify-fresh-sbom.yaml
 
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Pipeline file presence validation
+        shell: bash
+        run: |
+          echo "###########################################"
+          echo "ls -lrth"
+          ls -lrth
+          echo "###########################################"
+          echo "ls -al verify-fresh-sbom.yaml"
+          ls -al verify-fresh-sbom.yaml
+          echo "###########################################"
+          echo "ls -al $GITHUB_WORKSPACE/verify-fresh-sbom.yaml"
+          ls -al $GITHUB_WORKSPACE/verify-fresh-sbom.yaml
+          echo "###########################################"
+          echo "ls -al ${{ github.workspace }}/verify-fresh-sbom.yaml"
+          ls -al ${{ github.workspace }}/verify-fresh-sbom.yaml
+          echo "###########################################"
+          echo "pwd"
+          pwd
+          echo "###########################################"
         
       - name: Attest Source Code
         uses: scribe-security/action-bom@master
