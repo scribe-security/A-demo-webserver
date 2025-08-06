@@ -62,5 +62,6 @@ jobs:
               --scope.workflow.analyzed_logs
               --skip-cache
               --scope.workflow.name *build*
+              --scope.workflow.name *Build*
               --slsa-enable
               
