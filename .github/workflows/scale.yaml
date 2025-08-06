@@ -4,7 +4,7 @@ on:
 
 env:
     SCRIBE_PRODUCT_NAME: "Hello_World_Github"
-    SCRIBE_PRODUCT_VERSION: "0.0.2"
+    SCRIBE_PRODUCT_VERSION: "0.0.3"
     INPUT_FILE: "repos.csv"
     PLATFORMS_DB_PATH: k8s.platforms.db
     LOG_LEVEL: "TRACE"
