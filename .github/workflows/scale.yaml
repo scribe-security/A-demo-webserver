@@ -9,6 +9,7 @@ env:
     PLATFORMS_DB_PATH: k8s.platforms.db
     LOG_LEVEL: "TRACE"
     SCRIBE_TOKEN: ${{ secrets.SCRIBE_TOKEN }}
+    UNIQUE_ASSETS: TRUE
 
 jobs:
   update-repo-scope:
