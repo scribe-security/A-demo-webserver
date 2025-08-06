@@ -61,8 +61,8 @@ jobs:
               --scope.workflow.past_days 3
               --scope.workflow.analyzed_logs
               --skip-cache
-               --slsa-enable
-            #  --scope.workflow.name *build*
-            #  --scope.workflow.name *Build*
+              --scope.workflow.name *uild*
+              --slsa-enable
+           
              
               
