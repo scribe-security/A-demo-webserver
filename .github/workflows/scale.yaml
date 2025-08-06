@@ -48,7 +48,7 @@ jobs:
         - name: Discovery Github
           uses: scribe-security/action-platforms@master
           with:
-            command: discover
+            command: discover --valint-sign
             platform: github
             valint_args: --valint.log-level info
             args: 
