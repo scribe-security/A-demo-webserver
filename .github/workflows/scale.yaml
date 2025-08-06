@@ -48,11 +48,12 @@ jobs:
         - name: Discovery Github
           uses: scribe-security/action-platforms@master
           with:
-            command: discover --valint-sign
+            command: discover 
             platform: github
             valint_args: --valint.log-level info
             args: 
               ${{ env.REPO_SCOPE}}
+              --valint-sign
               --token ${{ secrets.GH_TOKEN }}
               --scope.organization=scribe-security
               --commit.skip --scope.branch=main
