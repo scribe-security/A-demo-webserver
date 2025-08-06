@@ -1,4 +1,4 @@
-name: SLSA-at-scale
+name: AA-SLSA-at-scale
 on:
   workflow_dispatch:
 
