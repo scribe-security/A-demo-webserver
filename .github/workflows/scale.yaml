@@ -50,7 +50,8 @@ jobs:
           with:
             command: discover 
             platform: github
-            valint_args: --valint.log-level info --valint.sign
+            valint_args: --valint.log-level info 
+             #--valint.sign
             args: 
               ${{ env.REPO_SCOPE}}
               --token ${{ secrets.GH_TOKEN }}
